@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+	/* Hide scrollbar for Chrome, Safari and Opera */
+	.no-scrollbar::-webkit-scrollbar {
+		display: none;
+	}
+
+	/* Hide scrollbar for IE, Edge and Firefox */
+	.no-scrollbar {
+		-ms-overflow-style: none; /* IE and Edge */
+		scrollbar-width: none; /* Firefox */
+	}
+}
+
+.message_cus_link .ant-message-notice-content{padding:25px 20px !important;}
+
+.message_cus_link .ant-message-notice-content .ant-message-custom-content.ant-message-success span{
+	font-weight: 700;
+}
+
+
+.p-radiobutton .p-radiobutton-box {
+	border: 2px solid #e3e3e3;
+    /* background: #ffffff; */
+}
+
