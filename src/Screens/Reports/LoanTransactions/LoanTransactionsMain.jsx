@@ -728,60 +728,60 @@ localStorage.clear()
 	}, [searchBrnchDiv])
 
 
-	// const displayedOptions =
-	// 	selectedOptions.length === dropdownOptions.length
-	// 		? [{ value: "all", label: "All" }]
-	// 		: selectedOptions
+	const displayedOptions =
+		selectedOptions.length === dropdownOptions.length
+			? [{ value: "all", label: "All" }]
+			: selectedOptions
 
-	const displayedOptions = selectedOptions.length === dropdownOptions.length ? selectedOptions : selectedOptions;
+	// const displayedOptions = selectedOptions.length === dropdownOptions.length ? selectedOptions : selectedOptions;
 
-	// const handleMultiSelectChange = (selected) => {
-	// 	console.log(selected, 'selectedselectedselected', selectedOptionsCondition, 'outside');
+	const handleMultiSelectChange = (selected) => {
+		console.log(selected, 'selectedselectedselected', selectedOptionsCondition, 'outside');
 		
-	// 	if (selected.some((option) => option.value === "all")) {
-	// 		setSelectedOptions(dropdownOptions)
-	// 		// console.log(selected, 'selectedselectedselected', 'all', selected.length);
-	// 		setSelectedOptionsCondition('all')
+		if (selected.some((option) => option.value === "all")) {
+			setSelectedOptions(dropdownOptions)
+			// console.log(selected, 'selectedselectedselected', 'all', selected.length);
+			setSelectedOptionsCondition('all')
 			
-	// 	} else {
-	// 		setSelectedOptions(selected)
-	// 		if(selected.length > 1){
-	// 		// console.log(selected, 'selectedselectedselected', 'mutiple branch', selected.length);
-	// 		setSelectedOptionsCondition('all')
-	// 		}
-	// 		if(selected.length === 1){
-	// 		// console.log(selected, 'selectedselectedselected', 'single branch', selected.length);
-	// 		setSelectedOptionsCondition('single')
-	// 		}
+		} else {
+			setSelectedOptions(selected)
+			if(selected.length > 1){
+			// console.log(selected, 'selectedselectedselected', 'mutiple branch', selected.length);
+			setSelectedOptionsCondition('all')
+			}
+			if(selected.length === 1){
+			// console.log(selected, 'selectedselectedselected', 'single branch', selected.length);
+			setSelectedOptionsCondition('single')
+			}
 
-	// 		if(selected.length < 1){
-	// 		// console.log(selected, 'selectedselectedselected', 'mutiple branch', selected.length);
-	// 		setSelectedOptionsCondition('no-data')
-	// 		}
-	// 	}
-	// }
+			if(selected.length < 1){
+			// console.log(selected, 'selectedselectedselected', 'mutiple branch', selected.length);
+			setSelectedOptionsCondition('no-data')
+			}
+		}
+	}
 
 
 	// Branchwise And Divisionwise options
-	const handleMultiSelectChange = (selected) => {
+	// const handleMultiSelectChange = (selected) => {
 		
-	// Normalize to array
-	const selectedArray = Array.isArray(selected)
-	? selected
-	: selected
-	? [selected]
-	: []
-	// console.log(selected, 'selectedselectedselected', selectedArray, 'outside');
-	setSelectedOptions(selectedArray)
+	// // Normalize to array
+	// const selectedArray = Array.isArray(selected)
+	// ? selected
+	// : selected
+	// ? [selected]
+	// : []
+	// // console.log(selected, 'selectedselectedselected', selectedArray, 'outside');
+	// setSelectedOptions(selectedArray)
 
-	if (selectedArray.length > 1) {
-	setSelectedOptionsCondition("all")
-	} else if (selectedArray.length === 1) {
-	setSelectedOptionsCondition("single")
-	} else {
-	setSelectedOptionsCondition("no-data")
-	}
-	}
+	// if (selectedArray.length > 1) {
+	// setSelectedOptionsCondition("all")
+	// } else if (selectedArray.length === 1) {
+	// setSelectedOptionsCondition("single")
+	// } else {
+	// setSelectedOptionsCondition("no-data")
+	// }
+	// }
 
 
 
@@ -909,8 +909,8 @@ localStorage.clear()
 						userDetails?.brn_code == 100 && (
 							<div className="w-[100%]">
 								<Select
-									// options={[{ value: "all", label: "All" }, ...dropdownOptions]}
-									options={[...dropdownOptions]}
+									options={[{ value: "all", label: "All" }, ...dropdownOptions]}
+									// options={[...dropdownOptions]}
 									// isMulti
 									isMulti={searchBrnchDiv === "B"}
 									// value={displayedOptions}

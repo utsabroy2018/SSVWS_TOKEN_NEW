@@ -548,7 +548,7 @@ function LoanStatementMain() {
 					{+userDetails?.brn_code === 100 && (
 						<div>
 
-							<TDInputTemplateBr
+							{/* <TDInputTemplateBr
 								// placeholder="Branch..."
 								placeholder={
 										searchBrnchDiv === "B"
@@ -562,9 +562,9 @@ function LoanStatementMain() {
 								handleChange={handleBranchChange}
 								mode={2}
 								data={branchOptions}
-							/>
+							/> */}
 
-							{/* <TDInputTemplateBr
+							<TDInputTemplateBr
 								placeholder="Branch..."
 								type="text"
 								label="Branch"
@@ -600,7 +600,7 @@ function LoanStatementMain() {
 										name: item?.branch_name,
 									})),
 								]}
-							/> */}
+							/>
 						</div>
 					)}
 
