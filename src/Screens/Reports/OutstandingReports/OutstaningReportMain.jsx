@@ -1046,32 +1046,51 @@ localStorage.clear()
 
 	// const displayedOptions = selectedOptions
 
-	// const displayedOptions =
-	// 	selectedOptions.length === dropdownOptions.length
-	// 		? [{ value: "all", label: "All" }]
-	// 		: selectedOptions
+	const displayedOptions =
+		selectedOptions.length === dropdownOptions.length
+			? [{ value: "all", label: "All" }]
+			: selectedOptions
 
-	const displayedOptions = selectedOptions.length === dropdownOptions.length ? selectedOptions : selectedOptions;
-
-	// const handleMultiSelectChange = (selected) => {
-	// 	// if (selected && selected.length > 4) {
-	// 	// 	return
-	// 	// }
-	// 	// setSelectedOptions(selected)
-
-
-	// 	if (selected.some((option) => option.value === "all")) {
-	// 		setSelectedOptions(dropdownOptions)
-	// 	} else {
-	// 		// setSelectedOptions(selected)
-	// 		// if (selected && selected.length > 4) {
-	// 		// return
-	// 		// }
-	// 		setSelectedOptions(selected)
-	// 	}
-	// }
+	// const displayedOptions = selectedOptions.length === dropdownOptions.length ? selectedOptions : selectedOptions;
 
 	const handleMultiSelectChange = (selected) => {
+
+		// if (selected && selected.length > 4) {
+		// 	return
+		// }
+		// setSelectedOptions(selected)
+	if(searchBrnchDiv === "B"){
+
+		if (selected.some((option) => option.value === "all")) {
+			setSelectedOptions(dropdownOptions)
+		} else {
+			// setSelectedOptions(selected)
+			// if (selected && selected.length > 4) {
+			// return
+			// }
+			setSelectedOptions(selected)
+		}
+
+		} else {
+		// Normalize to array
+	const selectedArray = Array.isArray(selected)
+	? selected
+	: selected
+	? [selected]
+	: []
+	// console.log(selected, 'selectedselectedselected', selectedArray, 'outside');
+	setSelectedOptions(selectedArray)
+
+	// if (selectedArray.length > 1) {
+	// setSelectedOptionsCondition("all")
+	// } else if (selectedArray.length === 1) {
+	// setSelectedOptionsCondition("single")
+	// } else {
+	// setSelectedOptionsCondition("no-data")
+	// }
+	}
+
+	const handleMultiSelectChange__ = (selected) => {
 		
 	// Normalize to array
 	const selectedArray = Array.isArray(selected)
@@ -1089,6 +1108,8 @@ localStorage.clear()
 	} else {
 	// setSelectedOptionsCondition("no-data")
 	}
+}
+
 	}
 
 	const dropdownCOs = cos?.map((branch) => ({
@@ -1208,7 +1229,8 @@ localStorage.clear()
 										// ]}
 										// isMulti
 										// value={displayedOptions}
-										options={[...dropdownOptions]}
+										// options={[...dropdownOptions]}
+										options={searchBrnchDiv === "B" ? [{ value: "all", label: "All" }, ...dropdownOptions] : [...dropdownOptions]}
 										isMulti={searchBrnchDiv === "B"}
 										value={
 										searchBrnchDiv === "B"

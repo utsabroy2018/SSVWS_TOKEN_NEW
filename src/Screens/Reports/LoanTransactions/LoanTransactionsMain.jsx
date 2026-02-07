@@ -572,7 +572,7 @@ localStorage.clear()
 		const diffDays = diffTime / (1000 * 60 * 60 * 24); // convert ms → days
 
 		// Define thresholds
-		const ONE_MONTH_DAYS = 31;
+		const ONE_MONTH_DAYS = 61;
 		const ONE_YEAR_DAYS = 365;
 
 		if(selectedOptionsCondition === 'all'){
@@ -591,7 +591,7 @@ localStorage.clear()
 		}
 
 		} else {
-		Message('error','For multiple branch date range must be within 1 month')
+		Message('error','For multiple branch date range must be within 2 month')
 		}
 
 		}
@@ -737,7 +737,7 @@ localStorage.clear()
 
 	const handleMultiSelectChange = (selected) => {
 		console.log(selected, 'selectedselectedselected', selectedOptionsCondition, 'outside');
-		
+		if(searchBrnchDiv === "B"){
 		if (selected.some((option) => option.value === "all")) {
 			setSelectedOptions(dropdownOptions)
 			// console.log(selected, 'selectedselectedselected', 'all', selected.length);
@@ -759,29 +759,47 @@ localStorage.clear()
 			setSelectedOptionsCondition('no-data')
 			}
 		}
+	} else {
+		// Normalize to array
+	const selectedArray = Array.isArray(selected)
+	? selected
+	: selected
+	? [selected]
+	: []
+	// console.log(selected, 'selectedselectedselected', selectedArray, 'outside');
+	setSelectedOptions(selectedArray)
+
+	if (selectedArray.length > 1) {
+	setSelectedOptionsCondition("all")
+	} else if (selectedArray.length === 1) {
+	setSelectedOptionsCondition("single")
+	} else {
+	setSelectedOptionsCondition("no-data")
+	}
+	}
 	}
 
 
 	// Branchwise And Divisionwise options
-	// const handleMultiSelectChange = (selected) => {
+	const handleMultiSelectChange__ = (selected) => {
 		
-	// // Normalize to array
-	// const selectedArray = Array.isArray(selected)
-	// ? selected
-	// : selected
-	// ? [selected]
-	// : []
-	// // console.log(selected, 'selectedselectedselected', selectedArray, 'outside');
-	// setSelectedOptions(selectedArray)
+	// Normalize to array
+	const selectedArray = Array.isArray(selected)
+	? selected
+	: selected
+	? [selected]
+	: []
+	// console.log(selected, 'selectedselectedselected', selectedArray, 'outside');
+	setSelectedOptions(selectedArray)
 
-	// if (selectedArray.length > 1) {
-	// setSelectedOptionsCondition("all")
-	// } else if (selectedArray.length === 1) {
-	// setSelectedOptionsCondition("single")
-	// } else {
-	// setSelectedOptionsCondition("no-data")
-	// }
-	// }
+	if (selectedArray.length > 1) {
+	setSelectedOptionsCondition("all")
+	} else if (selectedArray.length === 1) {
+	setSelectedOptionsCondition("single")
+	} else {
+	setSelectedOptionsCondition("no-data")
+	}
+	}
 
 
 
@@ -909,7 +927,8 @@ localStorage.clear()
 						userDetails?.brn_code == 100 && (
 							<div className="w-[100%]">
 								<Select
-									options={[{ value: "all", label: "All" }, ...dropdownOptions]}
+								// options={[{ value: "all", label: "All" }, ...dropdownOptions]}
+									options={searchBrnchDiv === "B" ? [{ value: "all", label: "All" }, ...dropdownOptions] : [...dropdownOptions]}
 									// options={[...dropdownOptions]}
 									// isMulti
 									isMulti={searchBrnchDiv === "B"}

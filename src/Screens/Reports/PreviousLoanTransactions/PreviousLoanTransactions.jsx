@@ -661,22 +661,32 @@ Authorization: `${tokenValue?.token}`, // example header
     // setSelectedOptionsCondition("no-data")
     }, [searchBrnchDiv])
 
-    // const displayedOptions =
-    //     selectedOptions.length === dropdownOptions.length
-    //         ? [{ value: "all", label: "All" }]
-    //         : selectedOptions
+    const displayedOptions =
+        selectedOptions.length === dropdownOptions.length
+            ? [{ value: "all", label: "All" }]
+            : selectedOptions
 
-    const displayedOptions = selectedOptions.length === dropdownOptions.length ? selectedOptions : selectedOptions;
-
-    // const handleMultiSelectChange = (selected) => {
-    //     if (selected.some((option) => option.value === "all")) {
-    //         setSelectedOptions(dropdownOptions)
-    //     } else {
-    //         setSelectedOptions(selected)
-    //     }
-    // }
+    // const displayedOptions = selectedOptions.length === dropdownOptions.length ? selectedOptions : selectedOptions;
 
     const handleMultiSelectChange = (selected) => {
+        if(searchBrnchDiv === "B"){
+        if (selected.some((option) => option.value === "all")) {
+            setSelectedOptions(dropdownOptions)
+        } else {
+            setSelectedOptions(selected)
+        }
+        } else {
+            const selectedArray = Array.isArray(selected)
+            ? selected
+            : selected
+            ? [selected]
+            : []
+            // console.log(selected, 'selectedselectedselected', selectedArray, 'outside');
+            setSelectedOptions(selectedArray)
+        }
+    }
+
+    const handleMultiSelectChange___ = (selected) => {
 		
 	// Normalize to array
 	const selectedArray = Array.isArray(selected)
@@ -803,7 +813,8 @@ Authorization: `${tokenValue?.token}`, // example header
                                     // options={[{ value: "all", label: "All" }, ...dropdownOptions]}
                                     // isMulti
                                     // value={displayedOptions}
-                                    options={[...dropdownOptions]}
+                                    // options={[...dropdownOptions]}
+                                    options={searchBrnchDiv === "B" ? [{ value: "all", label: "All" }, ...dropdownOptions] : [...dropdownOptions]}
 									isMulti={searchBrnchDiv === "B"}
 									value={
 									searchBrnchDiv === "B"

@@ -1048,23 +1048,41 @@ Authorization: `${tokenValue?.token}`, // example header
 	// setSelectedOptionsCondition("no-data")
 	}, [searchBrnchDiv])
 
-	// const displayedOptions =
-	// 	selectedOptions.length === dropdownOptions.length
-	// 		? [{ value: "all", label: "All" }]
-	// 		: selectedOptions;
+	const displayedOptions =
+		selectedOptions.length === dropdownOptions.length
+			? [{ value: "all", label: "All" }]
+			: selectedOptions;
 
-	const displayedOptions = selectedOptions.length === dropdownOptions.length ? selectedOptions : selectedOptions;
-
-	// const handleMultiSelectChange = (selected) => {
-	// 	console.log(selected, displayedOptions)
-	// 	if (selected.some((option) => option.value === "all")) {
-	// 		setSelectedOptions(dropdownOptions)
-	// 	} else {
-	// 		setSelectedOptions(selected)
-	// 	}
-	// }
+	// const displayedOptions = selectedOptions.length === dropdownOptions.length ? selectedOptions : selectedOptions;
 
 	const handleMultiSelectChange = (selected) => {
+		if(searchBrnchDiv === "B"){
+		console.log(selected, displayedOptions)
+		if (selected.some((option) => option.value === "all")) {
+			setSelectedOptions(dropdownOptions)
+		} else {
+			setSelectedOptions(selected)
+		}
+	} else {
+		const selectedArray = Array.isArray(selected)
+	? selected
+	: selected
+	? [selected]
+	: []
+	// console.log(selected, 'selectedselectedselected', selectedArray, 'outside');
+	setSelectedOptions(selectedArray)
+
+	if (selectedArray.length > 1) {
+	// setSelectedOptionsCondition("all")
+	} else if (selectedArray.length === 1) {
+	// setSelectedOptionsCondition("single")
+	} else {
+	// setSelectedOptionsCondition("no-data")
+	}
+	}
+	}
+
+	const handleMultiSelectChange__ = (selected) => {
 		
 	// Normalize to array
 	const selectedArray = Array.isArray(selected)
@@ -1184,7 +1202,8 @@ Authorization: `${tokenValue?.token}`, // example header
 										// 	{ value: "all", label: "All" },
 										// 	...dropdownOptions,
 										// ]}
-										options={[...dropdownOptions]}
+										// options={[...dropdownOptions]}
+										options={searchBrnchDiv === "B" ? [{ value: "all", label: "All" }, ...dropdownOptions] : [...dropdownOptions]}
 										// isMulti
 										isMulti={searchBrnchDiv === "B"}
 										// value={displayedOptions}

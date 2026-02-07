@@ -937,41 +937,59 @@ localStorage.clear()
 	// setSelectedOptionsCondition("no-data")
 	}, [searchBrnchDiv])
 
-	// const displayedOptions =
-	// 	selectedOptions.length === dropdownOptions.length
-	// 		? [{ value: "all", label: "All" }]
-	// 		: selectedOptions
+	const displayedOptions =
+		selectedOptions.length === dropdownOptions.length
+			? [{ value: "all", label: "All" }]
+			: selectedOptions
 
-	const displayedOptions = selectedOptions.length === dropdownOptions.length ? selectedOptions : selectedOptions;
+	// const displayedOptions = selectedOptions.length === dropdownOptions.length ? selectedOptions : selectedOptions;
 
-	// const handleMultiSelectChange = (selected) => {
-	// 	if (selected.some((option) => option.value === "all")) {
-	// 		setSelectedOptions(dropdownOptions)
-	// 	} else {
-	// 		setSelectedOptions(selected)
-	// 	}
-	// }
+	const handleMultiSelectChange = (selected) => {
+		if(searchBrnchDiv === "B"){
+		if (selected.some((option) => option.value === "all")) {
+			setSelectedOptions(dropdownOptions)
+		} else {
+			setSelectedOptions(selected)
+		}
+	} else {
+		const selectedArray = Array.isArray(selected)
+		? selected
+		: selected
+		? [selected]
+		: []
+		// console.log(selected, 'selectedselectedselected', selectedArray, 'outside');
+		setSelectedOptions(selectedArray)
+
+		if (selectedArray.length > 1) {
+		// setSelectedOptionsCondition("all")
+		} else if (selectedArray.length === 1) {
+		// setSelectedOptionsCondition("single")
+		} else {
+		// setSelectedOptionsCondition("no-data")
+		}
+	}
+	}
 
 	// Branchwise And Divisionwise options
-	const handleMultiSelectChange = (selected) => {
+	// const handleMultiSelectChange = (selected) => {
 		
-	// Normalize to array
-	const selectedArray = Array.isArray(selected)
-	? selected
-	: selected
-	? [selected]
-	: []
-	// console.log(selected, 'selectedselectedselected', selectedArray, 'outside');
-	setSelectedOptions(selectedArray)
+	// // Normalize to array
+	// const selectedArray = Array.isArray(selected)
+	// ? selected
+	// : selected
+	// ? [selected]
+	// : []
+	// // console.log(selected, 'selectedselectedselected', selectedArray, 'outside');
+	// setSelectedOptions(selectedArray)
 
-	if (selectedArray.length > 1) {
-	// setSelectedOptionsCondition("all")
-	} else if (selectedArray.length === 1) {
-	// setSelectedOptionsCondition("single")
-	} else {
-	// setSelectedOptionsCondition("no-data")
-	}
-	}
+	// if (selectedArray.length > 1) {
+	// // setSelectedOptionsCondition("all")
+	// } else if (selectedArray.length === 1) {
+	// // setSelectedOptionsCondition("single")
+	// } else {
+	// // setSelectedOptionsCondition("no-data")
+	// }
+	// }
 
 	const dropdownCOs = cos?.map((branch) => ({
 		value: branch.co_id,
@@ -1095,7 +1113,8 @@ localStorage.clear()
 							<div className="w-full">
 								<Select
 									// options={[{ value: "all", label: "All" }, ...dropdownOptions]}
-									options={[...dropdownOptions]}
+									options={searchBrnchDiv === "B" ? [{ value: "all", label: "All" }, ...dropdownOptions] : [...dropdownOptions]}
+									// options={[...dropdownOptions]}
 									// isMulti
 									isMulti={searchBrnchDiv === "B"}
 									// value={displayedOptions}

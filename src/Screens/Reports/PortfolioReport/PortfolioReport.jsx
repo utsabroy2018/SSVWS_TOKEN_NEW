@@ -815,31 +815,44 @@ Authorization: `${tokenValue?.token}`, // example header
 
 	// const displayedOptions = selectedOptions
 
-	// const displayedOptions =
-	// 	selectedOptions.length === dropdownOptions.length
-	// 		? [{ value: "all", label: "All" }]
-	// 		: selectedOptions
+	const displayedOptions =
+		selectedOptions.length === dropdownOptions.length
+			? [{ value: "all", label: "All" }]
+			: selectedOptions
 
-	const displayedOptions = selectedOptions.length === dropdownOptions.length ? selectedOptions : selectedOptions;
-
-	// const handleMultiSelectChange = (selected) => {
-	// 	// if (selected && selected.length > 4) {
-	// 	// 	return
-	// 	// }
-	// 	// setSelectedOptions(selected)
-
-	// 	if (selected.some((option) => option.value === "all")) {
-	// 		setSelectedOptions(dropdownOptions)
-	// 	} else {
-	// 		// setSelectedOptions(selected)
-	// 		// if (selected && selected.length > 4) {
-	// 		// return
-	// 		// }
-	// 		setSelectedOptions(selected)
-	// 	}
-	// }
+	// const displayedOptions = selectedOptions.length === dropdownOptions.length ? selectedOptions : selectedOptions;
 
 	const handleMultiSelectChange = (selected) => {
+		// if (selected && selected.length > 4) {
+		// 	return
+		// }
+		// setSelectedOptions(selected)
+
+		if(searchBrnchDiv === "B"){
+
+		if (selected.some((option) => option.value === "all")) {
+			setSelectedOptions(dropdownOptions)
+		} else {
+			// setSelectedOptions(selected)
+			// if (selected && selected.length > 4) {
+			// return
+			// }
+			setSelectedOptions(selected)
+		}
+	} else {
+	const selectedArray = Array.isArray(selected)
+	? selected
+	: selected
+	? [selected]
+	: []
+	// console.log(selected, 'selectedselectedselected', selectedArray, 'outside');
+	setSelectedOptions(selectedArray)
+	}
+
+
+	}
+
+	const handleMultiSelectChange__ = (selected) => {
 		
 	// Normalize to array
 	const selectedArray = Array.isArray(selected)
@@ -909,7 +922,7 @@ Authorization: `${tokenValue?.token}`, // example header
 				<main className="px-4 pb-5 bg-slate-50 rounded-lg shadow-lg h-auto my-10 mx-32">
 					<div className="flex flex-row gap-3 mt-20 py-3 rounded-xl">
 						<div className="text-3xl text-slate-700 font-bold">
-							Portfolio Report
+							Portfolio Report 
 						</div>
 					</div>
 
@@ -961,7 +974,8 @@ Authorization: `${tokenValue?.token}`, // example header
 									// options={[{ value: "all", label: "All" }, ...dropdownOptions]}
 									// isMulti
 									// value={displayedOptions}
-									options={[...dropdownOptions]}
+									// options={[...dropdownOptions]}
+									options={searchBrnchDiv === "B" ? [{ value: "all", label: "All" }, ...dropdownOptions] : [...dropdownOptions]}
 									isMulti={searchBrnchDiv === "B"}
 									value={
 									searchBrnchDiv === "B"

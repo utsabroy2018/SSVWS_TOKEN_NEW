@@ -291,7 +291,12 @@ const GroupReport = () => {
     // setSelectedOptionsCondition("no-data")
     }, [searchBrnchDiv])
 
-    const displayedOptions = selectedOptions.length === dropdownOptions.length ? selectedOptions : selectedOptions;
+    const displayedOptions =
+		selectedOptions.length === dropdownOptions.length
+			? [{ value: "all", label: "All" }]
+			: selectedOptions;
+
+    // const displayedOptions = selectedOptions.length === dropdownOptions.length ? selectedOptions : selectedOptions;
 
     const getCOs = async () => {
             setLoading(true)
@@ -365,15 +370,27 @@ const GroupReport = () => {
 		searchType
 	)}_${new Date().toLocaleString("en-GB")}.xlsx`
     	
-    // const handleMultiSelectChange = (selected) => {
-	// 	if (selected.some((option) => option.value === "all")) {
-	// 		setSelectedOptions(dropdownOptions)
-	// 	} else {
-	// 		setSelectedOptions(selected)
-	// 	}
-	// }
-
     const handleMultiSelectChange = (selected) => {
+
+        if(searchBrnchDiv === "B"){
+
+		if (selected.some((option) => option.value === "all")) {
+			setSelectedOptions(dropdownOptions)
+		} else {
+			setSelectedOptions(selected)
+		}
+        } else {
+            const selectedArray = Array.isArray(selected)
+            ? selected
+            : selected
+            ? [selected]
+            : []
+            // console.log(selected, 'selectedselectedselected', selectedArray, 'outside');
+            setSelectedOptions(selectedArray)
+        }
+	}
+
+    const handleMultiSelectChange___ = (selected) => {
 		
 	// Normalize to array
 	const selectedArray = Array.isArray(selected)
@@ -420,7 +437,7 @@ const GroupReport = () => {
                 <main className="px-4 pb-5 bg-slate-50 rounded-lg shadow-lg h-auto my-10 mx-32">
                     <div className="flex flex-row gap-3 mt-20  py-3 rounded-xl">
                         <div className="text-3xl text-slate-700 font-bold">
-                            Group Report
+                            Group Report 
                         </div>
                     </div>
 
@@ -473,7 +490,8 @@ const GroupReport = () => {
 									// options={[{ value: "all", label: "All" }, ...dropdownOptions]}
 									// isMulti
 									// value={displayedOptions}
-                                    options={[...dropdownOptions]}
+                                    // options={[...dropdownOptions]}
+                                    options={searchBrnchDiv === "B" ? [{ value: "all", label: "All" }, ...dropdownOptions] : [...dropdownOptions]}
 									isMulti={searchBrnchDiv === "B"}
 									value={
 									searchBrnchDiv === "B"
