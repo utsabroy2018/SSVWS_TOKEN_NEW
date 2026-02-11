@@ -400,6 +400,7 @@ const overdueGroupReportHeader = {
 	outstanding_interest: "Outstanding Interest",
 	total_outstanding: "Total Outstanding",
 	overdue: "Overdue Amount",
+	remarks: "Remarks"
 }
 
 const overdueFundReportHeader = {

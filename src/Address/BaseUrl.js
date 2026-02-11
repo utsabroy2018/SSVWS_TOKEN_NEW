@@ -12,10 +12,5 @@ export const url = "https://ssvwsadmin.opentech4u.co.in" // Production
 // export const url = "http://192.168.1.41:3014" //Local Subham
 
 
-
-
-
-
-
 // export const url = "https://ssvwsoci.synergicapi.in" // For Demo Purpose Only
 

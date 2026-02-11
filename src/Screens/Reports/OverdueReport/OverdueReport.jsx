@@ -85,7 +85,26 @@ const options3 = [
 	},
 ]
 
-	const Fortnight = [
+	const remarks_SMA = [
+	{
+		code: "SMA-0",
+		name: "SMA-0",
+	},
+	{
+		code: "SMA-1",
+		name: "SMA-1",
+	},
+	{
+		code: "SMA-2",
+		name: "SMA-2",
+	},
+	{
+		code: "SMA-3",
+		name: "SMA-3",
+	}
+	]
+
+		const Fortnight = [
 	{
 		code: "1",
 		name: "Week (1-3)",
@@ -145,6 +164,7 @@ function OverdueReport() {
 	const [fromTouched, setFromTouched] = useState(false)
 	const [toTouched, setToTouched] = useState(false)
 	const [weekOfRecovery, setWeekOfRecovery] = useState("")
+	const [Remarks_SMA_Value, setRemarks_SMA_Value] = useState("")
 
 	const maxDay = searchType3 === "Monthly" ? 31 : 7
 
@@ -153,7 +173,7 @@ function OverdueReport() {
 		toDay !== "" &&
 		+fromDay >= 1 &&
 		+toDay <= maxDay &&
-		+fromDay <= +toDay &&
+		+fromDay <= +toDay && 
 		(searchType3 !== "Fortnight" || weekOfRecovery !== "");
 
 	const showError = (fromTouched || toTouched) && !isValidRange;
@@ -584,6 +604,7 @@ localStorage.clear()
 			from_day: fromDay,
 			to_day: toDay,
 			week_no : weekOfRecovery,
+			remarks : Remarks_SMA_Value,
 		}
 
 		const tokenValue = await getLocalStoreTokenDts(navigate);
@@ -636,6 +657,7 @@ localStorage.clear()
 			to_day: toDay,
 			week_no : weekOfRecovery,
 			fund_id: selectedFund === "F" ? selectedFunds : [selectedFund],
+			remarks : Remarks_SMA_Value
 		}
 
 		const tokenValue = await getLocalStoreTokenDts(navigate);
@@ -693,6 +715,7 @@ Authorization: `${tokenValue?.token}`, // example header
 						: [selectedCO]
 					: coCodes,
 			week_no : weekOfRecovery,
+			remarks : Remarks_SMA_Value,
 		}
 
 		const tokenValue = await getLocalStoreTokenDts(navigate);
@@ -744,6 +767,7 @@ Authorization: `${tokenValue?.token}`, // example header
 			from_day: fromDay,
 			to_day: toDay,
 			week_no : weekOfRecovery,
+			remarks : Remarks_SMA_Value,
 		}
 
 		const tokenValue = await getLocalStoreTokenDts(navigate);
@@ -1271,12 +1295,30 @@ Authorization: `${tokenValue?.token}`, // example header
 							<div className="text-xl -mb-4 text-slate-700 font-bold">
 								Daywise 
 							</div>
-							<div className="mb-2">
+							<div className="grid grid-cols-3 gap-5 mt-5 items-end" style={{alignItems:'start'}}>
+							<div>
 								<Radiobtn
 									data={options3}
 									val={searchType3}
 									onChangeVal={(e) => onChange3(e)}
 								/>
+							</div>
+							<div>
+								{/* {JSON.stringify(Remarks_SMA_Value, 2)}  */}
+							<TDInputTemplateBr
+								placeholder="Category"
+								type="text"
+								label="Select Category"
+								name="remarks_dropdown"
+								formControlName={Remarks_SMA_Value}
+								handleChange={(e) => setRemarks_SMA_Value(e.target.value)}
+								data={remarks_SMA}
+								mode={2}
+								// disabled={
+								// 	!disbursementDetailsData.b_scheme || disburseOrNot
+								// }
+								/>
+							</div>
 							</div>
 
 							<div className="grid grid-cols-3 gap-5 mt-5 items-end" style={{alignItems:'start'}}>
@@ -1352,7 +1394,7 @@ Authorization: `${tokenValue?.token}`, // example header
 										onClick={() => {
 											handleSubmitDaywise()
 										}}
-										disabled={!isValidRange}
+										disabled={!isValidRange || Remarks_SMA_Value.length < 1}
 									>
 										<SearchOutlined /> <span className="ml-2">Find</span>
 									</button>
@@ -1398,6 +1440,7 @@ Authorization: `${tokenValue?.token}`, // example header
 
 					{searchType2 === "G" && reportData?.length > 0 && (
 						<>
+						{/* {JSON.stringify(reportData, 2)} */}
 							<DynamicTailwindTable
 								// data={reportData}
 								data={reportData?.map((el) => {
