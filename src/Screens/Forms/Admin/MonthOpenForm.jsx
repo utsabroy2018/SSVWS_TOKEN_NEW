@@ -65,31 +65,6 @@ function MonthOpenForm() {
 
 	const handleCheckUnapproveTransaction = async (array) => {
 
-		// if (selectedData.length === 0) return
-
-		
-
-		// const payload__ = {
-		// 				month_end_dtls: array.map((item) => ({
-		// 					branch_code: item.branch_code,
-		// 					closed_date: formatDateToYYYYMMDD(item.closed_date),
-		// 				})),
-		// 			}
-
-		
-
-		// console.log(array, 'arrayarrayarrayarray', payload__);
-		
-
-		// const result = array
-		// .map(item => item.branch_code)   // extract only branch_code
-		// .sort((a, b) => b - a);          // sort descending
-
-		// console.log(result);
-		
-
-		
-		// return
 
 		setLoading(true)
 
@@ -109,10 +84,6 @@ function MonthOpenForm() {
 		};
 
 		try {
-			
-
-			 
-
 			// return;
 
 			const res = await axios.post(

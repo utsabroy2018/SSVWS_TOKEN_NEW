@@ -122,6 +122,7 @@ const EditMasterEmployee = lazy(() => import("./Screens/Admin/Master/Employees/E
 const HomeAdmin = lazy(() => import("./Screens/Admin/HomeAdmin"));
 const AdminDashboard = lazy(() => import("./Screens/Admin/Dashboard/AdminDashboard"));
 const CreateUser = lazy(() => import("./Screens/Admin/UserManagement/CreateUser"));
+const ManualDayClose = lazy(() => import("./Screens/Admin/UserManagement/ManualDayClose"));
 const ManageUser = lazy(() => import("./Screens/Admin/UserManagement/ManageUser"));
 const TransferUserManage = lazy(() => import("./Screens/Admin/UserManagement/TransferUserManage"));
 const TransferUser = lazy(() => import("./Screens/Admin/UserManagement/TransferUser"));
@@ -647,6 +648,10 @@ const router = createBrowserRouter([
 							{
 								path: "createuser/:id",
 								element: <CreateUser />,
+							},
+							{
+								path: "manualdayclose",
+								element: <ManualDayClose />,
 							},
 							{
 								path: "manageuser",

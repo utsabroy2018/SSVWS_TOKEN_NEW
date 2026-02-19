@@ -414,11 +414,18 @@ function Sidebar({ mode = 0 }) {
 								// hidden: data?.transfer_user == "Y" ? false : true,
 							},
 							{
+								key: "sub7-7",
+								icon: <TableOutlined />,
+								label: <Link to={"/homeadmin/manualdayclose"}>Manual Day Close</Link>,
+								// hidden: data?.transfer_user == "Y" ? false : true,
+							},
+							{
 								key: "sub7-4",
 								icon: <TableOutlined />,
 								label: <Link to={"/homeadmin/monthend"}>Month End</Link>,
 								// hidden: data?.transfer_user == "Y" ? false : true,
 							},
+							
 							// {
 							// 	key: "sub7-6",
 							// 	icon: <TableOutlined />,
