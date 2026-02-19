@@ -1412,6 +1412,9 @@ Authorization: `${tokenValue?.token}`, // example header
 							}} options={md_columns} optionValue="index" optionLabel="header" 
 							filter placeholder="Choose Columns" maxSelectedLabels={3} className="w-full md:w-20rem mt-5" />
 					}
+
+					{/* {JSON.stringify(reportData, 2)} */}
+
 					{searchType2 === "M" && reportData?.length > 0 && (
 						<>
 							<DynamicTailwindTable

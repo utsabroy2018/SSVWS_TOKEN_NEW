@@ -400,6 +400,7 @@ const overdueGroupReportHeader = {
 	outstanding_interest: "Outstanding Interest",
 	total_outstanding: "Total Outstanding",
 	overdue: "Overdue Amount",
+	Category: "Category",
 	remarks: "Remarks"
 }
 
@@ -425,6 +426,7 @@ const overdueFundReportHeader = {
 	outstanding_interest: "Outstanding Interest",
 	total_outstanding: "Total Outstanding",
 	overdue: "Overdue Amount",
+	Category: "Category"
 }
 
 const overdueCOReportHeader = {
@@ -447,6 +449,7 @@ const overdueCOReportHeader = {
 	outstanding_interest: "Outstanding Interest",
 	total_outstanding: "Total Outstanding",
 	overdue: "Overdue Amount",
+	Category: "Category"
 }
 
 const overdueMemberReportHeader = {
@@ -481,6 +484,7 @@ const overdueMemberReportHeader = {
 	overdue: "Overdue Amount",
 	last_payment: "Last Payment Date",
 	od_days: "Overdue Days",
+	Category: "Category"
 }
 
 const overdueBranchReportHeader = {
@@ -492,6 +496,7 @@ const overdueBranchReportHeader = {
 	loan_amt: "Loan Amount",
 	total_outstanding: "Total Outstanding",
 	overdue: "Overdue Amount",
+	Category: "Category"
 }
 
 const memberwiseReportHeader = {
