@@ -1586,7 +1586,7 @@ localStorage.clear()
 					}
 					{reportData.length > 0 && searchType === "G" && (
 						<>
-						{/* {JSON.stringify(reportData, 2)} */}
+						{/* {JSON.stringify(reportData[0], 2)} */}
 							<DynamicTailwindTable
 								// data={reportData}
 
@@ -1647,6 +1647,7 @@ localStorage.clear()
 
 					{reportData.length > 0 && searchType === "C" && (
 						<>
+						{/* {JSON.stringify(reportData[0], 2)} */}
 							<DynamicTailwindTable
 								// data={reportData}
 								data={reportData?.map((el) => {

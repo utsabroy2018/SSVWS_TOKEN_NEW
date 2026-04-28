@@ -22,7 +22,9 @@ import * as XLSX from "xlsx"
 import { printTableLoanStatement } from "../../../Utils/printTableLoanStatement"
 import {
 	loanStatementHeader,
+	loanStatementHeader_New,
 	loanStatementHeaderGroupwise,
+	loanStatementHeaderGroupwise_New,
 } from "../../../Utils/Reports/headerMap"
 import { exportToExcel } from "../../../Utils/exportToExcel"
 import DynamicTailwindTable from "../../../Components/Reports/DynamicTailwindTable"
@@ -345,7 +347,7 @@ function LoanStatementMain() {
 			localStorage.clear()
 			} else {
 			setReportTxnData(res?.data?.msg)
-			populateColumns(res?.data?.msg, loanStatementHeader);
+			populateColumns(res?.data?.msg, loanStatementHeader_New);
 
 			}
 
@@ -388,7 +390,7 @@ function LoanStatementMain() {
 		} else {
 				setReportTxnData(res?.data?.msg)
 				// setTotSum(res?.data?.msg.reduce((n, { credit }) => n + credit, 0))
-				populateColumns(res?.data?.msg, loanStatementHeaderGroupwise);
+				populateColumns(res?.data?.msg, loanStatementHeaderGroupwise_New);
 		}
 
 			})
@@ -451,7 +453,7 @@ function LoanStatementMain() {
 	const dataToExport = reportTxnData
 
 	const headersToExport =
-		searchType === "M" ? loanStatementHeader : loanStatementHeaderGroupwise
+		searchType === "M" ? loanStatementHeader_New : loanStatementHeaderGroupwise_New
 
 	const fileName = `Loan_Statement_${fetchSearchTypeName(
 		searchType
@@ -513,7 +515,7 @@ function LoanStatementMain() {
 				<main className="px-4 pb-5 bg-slate-50 rounded-lg shadow-lg h-auto my-10 mx-32">
 					<div className="flex flex-row gap-3 mt-20  py-3 rounded-xl">
 						<div className="text-3xl text-slate-700 font-bold">
-							LOAN STATEMENTS 
+							LOAN STATEMENTS
 						</div>
 					</div>
 
@@ -548,7 +550,7 @@ function LoanStatementMain() {
 					{+userDetails?.brn_code === 100 && (
 						<div>
 
-							{/* <TDInputTemplateBr
+							<TDInputTemplateBr
 								// placeholder="Branch..."
 								placeholder={
 										searchBrnchDiv === "B"
@@ -562,9 +564,10 @@ function LoanStatementMain() {
 								handleChange={handleBranchChange}
 								mode={2}
 								data={branchOptions}
-							/> */}
-
-							<TDInputTemplateBr
+							/>
+							
+							{/* 28/04/2026 */}
+							{/* <TDInputTemplateBr
 								placeholder="Branch..."
 								type="text"
 								label="Branch"
@@ -600,7 +603,7 @@ function LoanStatementMain() {
 										name: item?.branch_name,
 									})),
 								]}
-							/>
+							/> */}
 						</div>
 					)}
 
@@ -918,7 +921,7 @@ function LoanStatementMain() {
 								// colRemove={[5]}
 								columnTotal={[7, 8]}
 								// colRemove={[0,1,2,3,4,6,10,11,13,14,15,16]}
-								headersMap={loanStatementHeader}
+								headersMap={loanStatementHeader_New}
 								colRemove={selectedColumns ? md_columns.map(el => {
 									if (!selectedColumns.includes(el.index)) {
 										return el.index
@@ -941,7 +944,7 @@ function LoanStatementMain() {
 								dateTimeExceptionCols={[0]}
 								columnTotal={[7, 8]}
 								// colRemove={[0,1,2,3,4,6,10,11,13,14,15,16]}
-								headersMap={loanStatementHeaderGroupwise}
+								headersMap={loanStatementHeaderGroupwise_New}
 								colRemove={selectedColumns ? md_columns.map(el => {
 									if (!selectedColumns.includes(el.index)) {
 										return el.index

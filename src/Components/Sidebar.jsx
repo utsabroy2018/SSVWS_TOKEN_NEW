@@ -699,6 +699,18 @@ function Sidebar({ mode = 0 }) {
 									},
 								],
 							},
+							{
+								key: "sub4-4",
+								icon: <EyeOutlined />,
+								label: <Link to={"/homebm/rejecttxn"}>Reject Transaction</Link>,
+								// hidden: data?.view_loan == "Y" ? false : true,
+							},
+							{
+								key: "sub4-6",
+								icon: <EyeOutlined />,
+								label: <Link to={"/homebm/rejecdisbursement"}>Reject Disbursement</Link>,
+								// hidden: data?.view_loan == "Y" ? false : true,
+							},
 						],
 					},
 					{

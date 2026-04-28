@@ -1485,6 +1485,8 @@ localStorage.clear()
 							filter placeholder="Choose Columns" maxSelectedLabels={3} className="w-full md:w-20rem mt-5" />
 					}
 
+					{/* {JSON.stringify(reportData[0], 2)} */}
+
 					{searchType === "M" && reportData.length > 0 && (
 						<>
 							<DynamicTailwindTable
@@ -1499,7 +1501,7 @@ localStorage.clear()
 									 };
 								})}
 								pageSize={50}
-								columnTotal={[33, 38, 39, 40]}
+								columnTotal={[34, 39, 40, 41]}
 								dateTimeExceptionCols={[8, 29, 31]}
 								headersMap={memberwiseOutstandingHeader}
 								colRemove={selectedColumns ? md_columns.map(el => {
@@ -1527,7 +1529,7 @@ localStorage.clear()
 									 };
 								})}
 								pageSize={50}
-								columnTotal={[12, 13, 14, 15]}
+								columnTotal={[14, 15, 16, 17]}
 								headersMap={groupwiseOutstandingHeader}
 								colRemove={selectedColumns ? md_columns.map(el => {
 										if(!selectedColumns.includes(el.index)){
@@ -1544,7 +1546,7 @@ localStorage.clear()
 							<DynamicTailwindTable
 								data={reportData}
 								pageSize={50}
-								columnTotal={[7, 8, 9, 10]}
+								columnTotal={[11, 12, 13, 14]}
 								headersMap={fundwiseOutstandingHeader}
 								colRemove={selectedColumns ? md_columns.map(el => {
 									  if(!selectedColumns.includes(el.index)){
@@ -1561,7 +1563,7 @@ localStorage.clear()
 							<DynamicTailwindTable
 								data={reportData}
 								pageSize={50}
-								columnTotal={[6, 7, 8, 9]}
+								columnTotal={[9, 10, 11, 12]}
 								headersMap={cowiseOutstandingHeader}
 								colRemove={selectedColumns ? md_columns.map(el => {
 									  if(!selectedColumns.includes(el.index)){

@@ -30,6 +30,7 @@ import {
 	fundwiseDemandVsCollectionHeader,
 	groupwiseDemandReportHeader,
 	groupwiseDemandVsCollectionHeader,
+	groupwiseDemandVsCollectionHeader_New,
 	memberwiseDemandReportHeader,
 	memberwiseDemandVsCollectionHeader,
 } from "../../../Utils/Reports/headerMap"
@@ -361,13 +362,13 @@ Authorization: `${tokenValue?.token}`, // example header
 
 				Message("error", res?.data?.msg)
 				setReportData([])
-				populateColumns([],groupwiseDemandVsCollectionHeader)
+				populateColumns([],groupwiseDemandVsCollectionHeader_New)
 				} else {
 				setReportData(res?.data?.groupwise_demand_collec_data?.msg)
 				// setTotSum(res?.data?.msg.reduce((n, { credit }) => n + credit, 0))
 				setMetadataDtls(`${userDetails?.brn_code}, Groupwise`)
 				setFetchedReportDate(res?.data?.dateRange)
-				populateColumns(res?.data?.groupwise_demand_collec_data?.msg,groupwiseDemandVsCollectionHeader)
+				populateColumns(res?.data?.groupwise_demand_collec_data?.msg,groupwiseDemandVsCollectionHeader_New)
 
 				}
 
@@ -998,7 +999,7 @@ Authorization: `${tokenValue?.token}`, // example header
 
 	const headersToExport =
 		searchType === "G"
-			? groupwiseDemandVsCollectionHeader
+			? groupwiseDemandVsCollectionHeader_New
 			: searchType === "M"
 			? memberwiseDemandVsCollectionHeader
 			: searchType === "F"
@@ -1629,6 +1630,7 @@ Authorization: `${tokenValue?.token}`, // example header
 							filter placeholder="Choose Columns" maxSelectedLabels={3} className="w-full md:w-20rem mt-5" />
 					}
 
+					{/* {JSON.stringify(reportData[0], 2)} */}
 					{reportData.length > 0 && searchType === "G" && (
 						<>
 							<DynamicTailwindTable
@@ -1646,7 +1648,7 @@ Authorization: `${tokenValue?.token}`, // example header
 								columnTotal={[9, 17, 18, 19, 20]}
 								// colRemove={[13]}
 								dateTimeExceptionCols={[8, 13, 14, 15]}
-								headersMap={groupwiseDemandVsCollectionHeader}
+								headersMap={groupwiseDemandVsCollectionHeader_New}
 								colRemove={selectedColumns ? md_columns.map(el => {
 									  if(!selectedColumns.includes(el.index)){
 										return el.index

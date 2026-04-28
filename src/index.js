@@ -167,9 +167,7 @@ const EditRecoveryApproveFormBM = lazy(() =>
 	import("./Screens/BMHome/EditRecoveryApproveFormBM")
 )
 const SearchViewLoanBM = lazy(() => import("./Screens/BMHome/SearchViewLoanBM"))
-const EditViewLoanFormBM = lazy(() =>
-	import("./Screens/BMHome/EditViewLoanFormBM")
-)
+const EditViewLoanFormBM = lazy(() => import("./Screens/BMHome/EditViewLoanFormBM"))
 const MemberLoanDetailsBM = lazy(() =>
 	import("./Screens/BMHome/MemberLoanDetailsBM")
 )
