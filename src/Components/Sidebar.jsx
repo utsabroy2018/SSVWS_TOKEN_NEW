@@ -319,6 +319,12 @@ function Sidebar({ mode = 0 }) {
 								label: <Link to={"/homebm/loancalculator"}>Loan EMI Calculator</Link>,
 								// hidden: data?.designation == "Y" ? false : true,
 							},
+							{
+								key: "sub4-7",
+								icon: <DatabaseOutlined />,
+								label: <Link to={"/homebm/overduevisit"}>Overdue Visit</Link>,
+								// hidden: data?.designation == "Y" ? false : true,
+							},
 						],
 					},
 					{

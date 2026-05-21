@@ -758,6 +758,15 @@ const absenteesReportHeader = {
 	branch_name: "Branch Name",
 }
 
+const overdueVisitHeader = {
+	group_code: "Group Code",
+	group_name: "Group Name",
+	member_name: "Member Name",
+	member_code: "Member Code",
+	// branch_id: "Branch ID",
+	// branch_name: "Branch Name",
+}
+
 const loanStatementHeader = {
 	// trans_date: "Transaction Date",
 	// trans_no: "Transaction No",
@@ -1323,6 +1332,7 @@ export {
 	transactionFieldNames,
 	attendanceReportHeader,
 	absenteesReportHeader,
+	overdueVisitHeader,
 	rejectTransFieldNames,
 	loanStatementHeader,
 	loanStatementHeader_New,

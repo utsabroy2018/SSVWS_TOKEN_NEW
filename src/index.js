@@ -154,6 +154,9 @@ const MonthOpen = lazy(() => import("./Screens/Admin/UserManagement/MonthOpen"))
 
 const Payroll = lazy(() => import("./Screens/Admin/Payroll/Payroll"));
 
+const OverdueVisitBM = lazy(() => import("./Screens/BMHome/OverdueVisitBM"));
+const OverdueVisit = lazy(() => import("./Screens/Admin/OverdueVisit/OverdueVisit"));
+
 
 const RejectTransaction = lazy(() => import("./Screens/BMHome/Loans/RejectTransaction"));
 
@@ -364,6 +367,10 @@ const router = createBrowserRouter([
 							{
 								path: "attendancebm",
 								element: <AttendanceBM />,
+							},
+							{
+								path: "overduevisit",
+								element: <OverdueVisitBM />,
 							},
 							{
 								path: "co_tracking",

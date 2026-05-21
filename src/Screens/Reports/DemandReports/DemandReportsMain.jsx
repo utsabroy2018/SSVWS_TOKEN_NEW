@@ -516,18 +516,17 @@ localStorage.clear()
 	const handleFetchCOwiseReport = async () => {
 		setLoading(true)
 		
-		
 		const branchCodes = selectedOptions?.map((item, i) => item?.value)
 		const coCodes = selectedCOs?.map((item, i) => item?.value)
 		const allCos = cos?.map((item, i) => item?.co_id)
 
 		console.log(coCodes, '|||', allCos,  'CREDS==', coCodes?.length === 0 
-  ? (co?.split(",")[0] === "AC" 
-      ? allCos 
-      : co?.split(",")[0] 
-        ? [co?.split(",")[0]] 
-        : ["0"]) 
-  : coCodes, 'coCodes');
+		? (co?.split(",")[0] === "AC" 
+			? allCos 
+			: co?.split(",")[0] 
+				? [co?.split(",")[0]] 
+				: ["0"]) 
+		: coCodes, 'coCodes');
 
 		const creds = {
 			branch_code:
