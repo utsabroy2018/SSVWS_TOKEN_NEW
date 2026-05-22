@@ -76,9 +76,7 @@ function COTracking({ branchCode = 100 }) {
 	const [reportData, setReportData] = useState(() => [])
 	// const [absentListData, setAbsentListData] = useState(() => [])
 	const [branch, setBranch] = useState(() =>
-		+branchCode !== 100
-			? `${userDetails?.brn_code},${userDetails?.branch_name}`
-			: ""
+		branchCode !== 100 ? `${userDetails?.brn_code},${userDetails?.branch_name}` : ""
 	)
 	const [branches, setBranches] = useState(() => [])
 	const [employees, setEmployees] = useState(() => [])
@@ -196,12 +194,12 @@ function COTracking({ branchCode = 100 }) {
 		const tokenValue = await getLocalStoreTokenDts(navigate);
 
 		const creds = {
-			act_dt: formatDateToYYYYMMDD(fromDate),
-			// to_date: formatDateToYYYYMMDD(toDate),
-			// branch_id: userDetails?.brn_code,
-			// branch_id: branch.split(",")[0],
+			branch_code: branch.split(",")[0],
 			emp_id: employee,
+			act_dt: formatDateToYYYYMMDD(fromDate),
 		}
+
+		
 		// console.log("KKKKKKKKKKKKKKKKKKK======", branch)
 		await axios.post(`${url}/activity_log`, creds, {
 		headers: {
@@ -257,7 +255,7 @@ function COTracking({ branchCode = 100 }) {
 				<main className="px-4 pb-5 bg-slate-50 rounded-lg shadow-lg h-auto my-10 mx-32">
 					<div className="flex flex-row gap-3 py-3 rounded-xl">
 						<div className="text-3xl text-slate-700 font-bold">
-							CO Tracking
+							CO or BM Tracking
 						</div>
 					</div>
 

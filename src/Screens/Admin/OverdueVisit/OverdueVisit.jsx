@@ -10,6 +10,7 @@ import {
 	PrinterOutlined,
 	FileExcelOutlined,
 	CheckCircleOutlined,
+	EnvironmentOutlined,
 } from "@ant-design/icons"
 import TDInputTemplateBr from "../../../Components/TDInputTemplateBr"
 import { formatDateToYYYYMMDD } from "../../../Utils/formateDate"
@@ -38,14 +39,21 @@ function OverdueVisit({ branchCode = 100 }) {
 
 	const [fromDate, setFromDate] = useState()
 	const [toDate, setToDate] = useState()
-	const [branch, setBranch] = useState(() =>
-		+branchCode !== 100
-			? `${userDetails?.brn_code},${userDetails?.branch_name}`
-			: ""
-	)
+	// const [branch, setBranch] = useState(() =>
+	// 	+branchCode !== 100
+	// 		? `${userDetails?.brn_code},${userDetails?.branch_name}`
+	// 		: ""
+	// )
+
+	const [branch, setBranch] = useState(() => '')
 	const [branches, setBranches] = useState(() => [])
 
 	const [overdueListData, setOverdueListData] = useState(() => [])
+
+	const [isModalOpen, setIsModalOpen] = useState(false)
+	const [selectedLoan, setSelectedLoan] = useState(null)
+	const [showAddress, setShowAddress] = useState('')
+	const [searchText, setSearchText] = useState("")
 
 	const navigate = useNavigate()
 
@@ -55,23 +63,23 @@ function OverdueVisit({ branchCode = 100 }) {
 
 		await axios
 			.get(`${url}/fetch_all_branch_dt`, {
-		headers: {
-		Authorization: `${tokenValue?.token}`, // example header
-		"Content-Type": "application/json", // optional
-		},
-		})
+				headers: {
+					Authorization: `${tokenValue?.token}`, // example header
+					"Content-Type": "application/json", // optional
+				},
+			})
 			.then((res) => {
 
-			if(res?.data?.suc === 0){
+				if (res?.data?.suc === 0) {
 
-			navigate(routePaths.LANDING)
-			localStorage.clear()
-			Message('error', res?.data?.msg)
+					// navigate(routePaths.LANDING)
+					// localStorage.clear()
+					Message('error', res?.data?.msg)
 
-			} else {
-			// console.log("QQQQQQQQQQQQQQQQ", res?.data)
-			setBranches(res?.data?.msg)
-			}
+				} else {
+					console.log("QQQQQQQQQQQQQQQQ", res?.data)
+					setBranches(res?.data?.msg)
+				}
 
 			})
 			.catch((err) => {
@@ -84,32 +92,34 @@ function OverdueVisit({ branchCode = 100 }) {
 	const fetchOverdueList = async () => {
 		setOverdueListData([])
 		setLoading(true)
+
 		const tokenValue = await getLocalStoreTokenDts(navigate);
+
 		const creds = {
-		id: userDetails?.id,
-		branch_code: userDetails?.brn_code,
-		emp_id: userDetails?.emp_id,
-		from_dt: formatDateToYYYYMMDD(fromDate),
-		to_dt: formatDateToYYYYMMDD(toDate),
+			id: String(userDetails?.id),
+			branch_code: userDetails?.brn_code == 100 ? branch.split(",")[0] : userDetails?.brn_code,
+			emp_id: userDetails?.emp_id,
+			from_dt: formatDateToYYYYMMDD(fromDate),
+			to_dt: formatDateToYYYYMMDD(toDate),
 		}
 
 		axios.post(`${url}/app_visit_op/fetch_list_save_visit_operation`, creds, {
-		headers: {
-		Authorization: `${tokenValue?.token}`, // example header
-		"Content-Type": "application/json", // optional
-		},
+			headers: {
+				Authorization: `${tokenValue?.token}`, // example header
+				"Content-Type": "application/json", // optional
+			},
 		}).then((res) => {
-		if(res?.data?.suc === 0){
-        Message('error', res?.data?.msg)
-		// navigate(routePaths.LANDING)
-		// localStorage.clear()
-		setOverdueListData([])
-		} else {
-			console.log("userDetailsuserDetailsuserDetailsuserDetails", res?.data)
-			Message('success',res?.data?.msg)
-			setOverdueListData(res?.data?.data)
-		}
-		setLoading(false)
+			if (res?.data?.suc === 0) {
+				Message('error', res?.data?.msg)
+				// navigate(routePaths.LANDING)
+				// localStorage.clear()
+				setOverdueListData([])
+			} else {
+				console.log("userDetailsuserDetailsuserDetailsuserDetails", res?.data)
+				Message('success', res?.data?.msg)
+				setOverdueListData(res?.data?.data)
+			}
+			setLoading(false)
 		})
 	}
 
@@ -117,27 +127,129 @@ function OverdueVisit({ branchCode = 100 }) {
 		handleFetchBranches()
 	}, [])
 
-	const filteredOverdueListData = overdueListData.map(
-	({ member_code, loan_id, ...rest }) => ({
-	...rest,
-	action: (
-	<button
-	className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-	onClick={() => handleView(loan_id)}
-	>
-	View
-	</button>
-	),
+	// const filteredOverdueListData = overdueListData.map(
+	// ({ member_code, loan_id, ...rest }) => ({
+	// ...rest,
+	// action: (
+	// <button
+	// className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+	// onClick={() => handleView(loan_id)}
+	// >
+	// View
+	// </button>
+	// ),
+	// })
+	// );
+
+	// const filteredOverdueListData = overdueListData.map((item) => {
+
+	// 	const { member_code, loan_id, branch_code, ...rest } = item
+
+	// 	return {
+	// 		...rest,
+
+	// 		action: (
+	// 			<button
+	// 				className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+	// 				onClick={() => handleView(item)}
+	// 			>
+	// 				View
+	// 			</button>
+	// 		),
+	// 	}
+	// })
+
+	const filteredOverdueListData = overdueListData
+	.filter((item) => {
+
+		const search = searchText.toLowerCase()
+
+		return (
+			item?.group_code?.toString()?.toLowerCase()?.includes(search) ||
+			item?.group_name?.toLowerCase()?.includes(search) ||
+			item?.member_name?.toLowerCase()?.includes(search)
+		)
 	})
-	);
+	.map((item) => {
 
-	const handleView = (loanId) => {
-	console.log("View Loan ID:", loanId);
+		const { member_code, loan_id, branch_code, ...rest } = item
 
-	// your navigation or modal logic here
-	};
+		return {
+			...rest,
 
-	
+			action: (
+				<button
+					className="button_Over_view"
+					onClick={() => handleView(item)}
+				>
+					View
+				</button>
+			),
+		}
+	})
+
+	const handleView = async (item) => {
+
+		setLoading(true)
+		setIsModalOpen(true)
+
+		setShowAddress('')
+
+		const tokenValue = await getLocalStoreTokenDts(navigate);
+
+		const creds = {
+			branch_code: item?.branch_code,
+			group_code: item?.group_code,
+			member_code: item?.member_code,
+			loan_id: item?.loan_id,
+		}
+
+		axios.post(`${url}/app_visit_op/fetch_visit_view_data`, creds, {
+			headers: {
+				Authorization: `${tokenValue?.token}`, // example header
+				"Content-Type": "application/json", // optional
+			},
+		}).then((res) => {
+
+			console.log("userDetailsuserDetailsuserDetailsuserDetails", res?.data)
+			// setSelectedLoan(demoData)
+
+			if (res?.data?.suc === 0) {
+				Message('error', res?.data?.msg)
+				setSelectedLoan([])
+			} else {
+				Message('success', res?.data?.msg)
+				// setOverdueListData(res?.data?.data)
+				setSelectedLoan(res?.data)
+
+			}
+			setLoading(false)
+		})
+	}
+
+
+	const viewAddress = async () => {
+
+		setLoading(true)
+		setShowAddress('')
+
+		// await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${location?.latitude},${location?.longitude}&key=AIzaSyDdA5VPRPZXt3IiE3zP15pet1Nn200CRzg`)
+		await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${selectedLoan?.action_details[0]?.visit_lat},${selectedLoan?.action_details[0]?.visit_long}&key=AIzaSyDdA5VPRPZXt3IiE3zP15pet1Nn200CRzg`)
+			.then(res => {
+				// handleSave(res?.data?.results[0]?.formatted_address);
+				// console.log(res?.data?.results[0]?.formatted_address, 'addresssssssssss');
+
+				setShowAddress(res?.data?.results[0]?.formatted_address)
+				setLoading(false);
+
+			}).catch(err => {
+				console.log("Error fetching geolocation address", err?.message);
+				setLoading(false);
+			})
+
+	}
+
+
 	return (
 		<div>
 			<Spin
@@ -153,58 +265,44 @@ function OverdueVisit({ branchCode = 100 }) {
 						</div>
 					</div>
 
-					<div className="grid grid-cols-3 gap-5 mt-5">
+					{/* <>{JSON.stringify(branch.split(",")[0], null, 2)}</>
+					<>{JSON.stringify(userDetails, null, 2)}</> */}
 
+					<div className={userDetails?.brn_code == 100 ? 'grid gap-5 mt-5 grid-cols-3' : 'grid gap-5 mt-5 grid-cols-2'}>
+
+						{userDetails?.brn_code == 100 && (
 						<div>
 							<TDInputTemplateBr
-								placeholder="Branch..."
-								type="text"
-								label="Branch"
-								name="branch"
-								formControlName={branch?.split(",")[0]}
-								handleChange={(e) => {
-									console.log("***********========", e)
-									// setBranch(
-									// 	e.target.value +
-									// 		"," +
-									// 		branches.filter((i) => i.branch_code == e.target.value)[0]
-									// 			?.branch_name
-									// )
-									setBranch(
-										e.target.value +
-											"," +
-											[
-												{ branch_code: "A", branch_name: "All Branches" },
-												...branches,
-											].filter((i) => i.branch_code == e.target.value)[0]
-												?.branch_name
-									)
-									console.log(branches)
-									console.log(
-										e.target.value +
-											"," +
-											[
-												{ branch_code: "A", branch_name: "All Branches" },
-												...branches,
-											].filter((i) => i.branch_code == e.target.value)[0]
-												?.branch_name
-									)
-								}}
-								mode={2}
-								disabled={+branchCode !== 100}
-								// data={branches?.map((item, i) => ({
-								// 	code: item?.branch_code,
-								// 	name: item?.branch_name,
-								// }))}
-								data={[
-									{ code: "A", name: "All Branches" },
-									...branches?.map((item, i) => ({
-										code: item?.branch_code,
-										name: item?.branch_name,
-									})),
-								]}
-							/>
+							placeholder="Branch..."
+							type="text"
+							label="Branch"
+							name="branch"
+							formControlName={branch?.split(",")[0]}
+							handleChange={(e) => {
+								console.log("***********========", e)
+
+								const selectedBranch = branches?.find(
+									(i) => i.branch_code == e.target.value
+								)
+
+								setBranch(
+									e.target.value + "," + selectedBranch?.branch_name
+								)
+							}}
+							mode={2}
+							data={branches
+								?.filter(
+									(item) =>
+										item?.branch_code !== 100
+								)
+								?.map((item) => ({
+									code: item?.branch_code,
+									name: item?.branch_name,
+								}))
+							}
+						/>
 						</div>
+						)}
 
 						<div>
 							<TDInputTemplateBr
@@ -233,8 +331,8 @@ function OverdueVisit({ branchCode = 100 }) {
 							/>
 						</div>
 
-						
-						
+
+
 
 						<div className="flex justify-center col-span-3">
 							<button
@@ -253,17 +351,334 @@ function OverdueVisit({ branchCode = 100 }) {
 						</div>
 					</div>
 
-					{/* <>{JSON.stringify(overdueListData[0], null, 2)}</> */}
+					{/* <>{JSON.stringify(overdueListData, null, 2)}</> */}
+					<div className="table_overdue">
+					{overdueListData && overdueListData.length > 0 &&(
+					<div className="flex justify-end mt-6 mb-3">
+						<div className="w-full md:w-100">
+							<input
+								type="text"
+								placeholder="Search by Group Code, Group Name, Member Name..."
+								value={searchText}
+								onChange={(e) => setSearchText(e.target.value)}
+								className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+							/>
+						</div>
+					</div>
+					)}
 
 					<DynamicTailwindTable
-					data={filteredOverdueListData}
-					headersMap={overdueVisitHeader}
-					pageSize={20}
-					indexing
-					dateTimeExceptionCols={[4]}
-					/>								
-			
-					
+						data={filteredOverdueListData}
+						headersMap={overdueVisitHeader}
+						pageSize={20}
+						indexing
+						dateTimeExceptionCols={[4]}
+					/>
+					</div>
+
+
+					<Modal
+						title={
+							<div className="text-xl font-bold text-slate-700">
+								Overdue Visit Details
+							</div>
+						}
+						open={isModalOpen}
+						onCancel={() => setIsModalOpen(false)}
+						footer={[
+							<Button key="close" onClick={() => setIsModalOpen(false)}>
+								Close
+							</Button>,
+						]}
+						width={850}
+					>
+						{selectedLoan && (
+							<div className="space-y-5">
+
+								{/* Member Details */}
+								<div className="border rounded-xl p-4 bg-gray-50">
+									<h2 className="text-lg font-semibold mb-4 text-slate-700">
+										Member Details
+									</h2>
+
+									<div className="grid grid-cols-2 gap-4 text-sm">
+
+										<div>
+											<p className="font-semibold text-gray-500">
+												Visit Date & Time
+											</p>
+											<p>
+												{selectedLoan?.member_details?.datetime_visit}
+											</p>
+										</div>
+
+										<div>
+											<p className="font-semibold text-gray-500">
+												Group Name
+											</p>
+											<p>
+												{selectedLoan?.member_details?.group_name}
+											</p>
+										</div>
+
+										<div>
+											<p className="font-semibold text-gray-500">
+												Member Name
+											</p>
+											<p>
+												{selectedLoan?.member_details?.member_name}
+											</p>
+										</div>
+
+										<div>
+											<p className="font-semibold text-gray-500">
+												Mobile Number
+											</p>
+											<p>
+												{selectedLoan?.member_details?.client_mobile}
+											</p>
+										</div>
+
+										<div className="col-span-2">
+											<p className="font-semibold text-gray-500">
+												Address
+											</p>
+											<p>
+												{selectedLoan?.member_details?.client_addr}
+											</p>
+										</div>
+
+									</div>
+								</div>
+
+								{/* Loan Details */}
+								<div className="border rounded-xl p-4 bg-gray-50">
+									<h2 className="text-lg font-semibold mb-4 text-slate-700">
+										Loan Details
+									</h2>
+
+									{selectedLoan?.loan_details?.map((loan, index) => (
+										<div
+											key={index}
+											className="grid grid-cols-2 gap-4 text-sm border-b pb-4 mb-4 last:border-none last:mb-0"
+										>
+
+											<div>
+												<p className="font-semibold text-gray-500">
+													Loan ID
+												</p>
+												<p>{loan?.loan_id}</p>
+											</div>
+
+											<div>
+												<p className="font-semibold text-gray-500">
+													Scheme Name
+												</p>
+												<p>{loan?.scheme_name}</p>
+											</div>
+
+											<div>
+												<p className="font-semibold text-gray-500">
+													Disbursement Date
+												</p>
+												<p>{loan?.disb_dt}</p>
+											</div>
+
+											<div>
+												<p className="font-semibold text-gray-500">
+													EMI Amount
+												</p>
+												<p>₹ {loan?.tot_emi}</p>
+											</div>
+
+											<div>
+												<p className="font-semibold text-gray-500">
+													Member Disbursement
+												</p>
+												<p>₹ {loan?.member_disb_amount}</p>
+											</div>
+
+											<div>
+												<p className="font-semibold text-gray-500">
+													Group Disbursement
+												</p>
+												<p>₹ {loan?.group_disb_amount}</p>
+											</div>
+
+										</div>
+									))}
+								</div>
+
+								{/* Overdue Details */}
+								<div className="border rounded-xl p-4 bg-red-50">
+									<h2 className="text-lg font-semibold mb-4 text-red-600">
+										Overdue Details
+									</h2>
+
+									{selectedLoan?.overdue_details?.map((overdue, index) => (
+										<div
+											key={index}
+											className="grid grid-cols-2 gap-4 text-sm"
+										>
+
+											<div>
+												<p className="font-semibold text-gray-500">
+													Overdue Date
+												</p>
+												<p>{overdue?.overdue_date}</p>
+											</div>
+
+											<div>
+												<p className="font-semibold text-gray-500">
+													Member Overdue Amount
+												</p>
+												<p className="text-red-600 font-semibold">
+													₹ {overdue?.member_overdue_amount}
+												</p>
+											</div>
+
+											<div>
+												<p className="font-semibold text-gray-500">
+													Member Outstanding
+												</p>
+												<p>
+													₹ {overdue?.member_outstanding}
+												</p>
+											</div>
+
+											<div>
+												<p className="font-semibold text-gray-500">
+													Group Overdue Amount
+												</p>
+												<p>
+													₹ {overdue?.group_overdue_amount}
+												</p>
+											</div>
+
+											<div>
+												<p className="font-semibold text-gray-500">
+													Group Outstanding
+												</p>
+												<p>
+													₹ {overdue?.group_outstanding}
+												</p>
+											</div>
+
+										</div>
+									))}
+								</div>
+
+								{/* Action Details */}
+								<div className="border rounded-xl p-4 bg-blue-50">
+									<h2 className="text-lg font-semibold mb-4 text-indigo-600">
+										Visit Action Details
+									</h2>
+
+									{selectedLoan?.action_details?.map((action, index) => (
+										<div
+											key={index}
+											className="grid grid-cols-2 gap-4 text-sm"
+										>
+
+											<div>
+												<p className="font-semibold text-gray-500">
+													Promise Date
+												</p>
+												<p>{action?.promise_date}</p>
+											</div>
+
+											<div>
+												<p className="font-semibold text-gray-500">
+													Promise Amount
+												</p>
+												<p className="font-semibold text-green-600">
+													₹ {action?.promise_amt}
+												</p>
+											</div>
+
+											{/* <div className="col-span-2">
+												<p className="font-semibold text-gray-500">
+													Remarks
+												</p>
+												<p>{action?.remarks}</p>
+											</div> */}
+
+											<div className="col-span-2">
+												<div className="flex items-center justify-between mb-2">
+													<p className="font-semibold text-gray-500">
+														Remarks
+													</p>
+												</div>
+
+												<p className="bg-white border rounded-lg p-3 break-words text-gray-700 leading-6 shadow-sm">
+													{action?.remarks}
+												</p>
+
+											</div>
+
+											<div className="col-span-2">
+												<div className="flex items-center justify-between mb-2">
+													<p className="font-semibold text-gray-500">
+														Address
+													</p>
+
+													<button
+														onClick={() => {
+															viewAddress()
+														}}
+														className="flex items-center gap-2 bg-[#DA4167] hover:bg-[#DA4167] text-white text-xs px-3 py-1.5 rounded-sm transition-all duration-200 shadow-sm"
+													>
+														<EnvironmentOutlined />
+														View Location
+													</button>
+												</div>
+
+												{showAddress && (
+													<>
+													<p className="bg-white border rounded-lg p-3 break-words text-gray-700 leading-6 shadow-sm">
+														{showAddress}
+													</p>
+
+													{/* Google Map */}
+												<div className="w-full h-[250px] rounded-lg overflow-hidden border shadow-sm mt-5">
+													<iframe
+														width="100%"
+														height="100%"
+														frameBorder="0"
+														scrolling="no"
+														marginHeight="0"
+														marginWidth="0"
+														src={`https://maps.google.com/maps?q=${selectedLoan?.action_details[0]?.visit_lat},${selectedLoan?.action_details[0]?.visit_long}&z=15&output=embed`}
+														title="location-map"
+													/>
+												</div>
+												</>
+												)}
+
+											</div>
+
+
+											<div className="col-span-2">
+												<p className="font-semibold text-gray-500 mb-2">
+													Uploaded Image
+												</p>
+
+												<img
+													src={`${url}${action?.upload_img}`}
+													alt="visit"
+													className="w-100 h-100 object-cover rounded-lg border"
+												/>
+											</div>
+
+										</div>
+									))}
+								</div>
+
+							</div>
+						)}
+					</Modal>
+
+
 				</main>
 			</Spin>
 		</div>

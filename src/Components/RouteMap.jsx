@@ -26,10 +26,11 @@ export default function RouteMap({ data = [] }) {
     }
 
     const points = data.map((x) => ({
-      lat: parseFloat(x.latitude),
-      lng: parseFloat(x.longitude),
-      timestamp: x.timestamp,
+      lat: parseFloat(x.lat),
+      lng: parseFloat(x.lng),
+      timestamp: x.datetime_plot,
       sl_no: x.sl_no,
+      opt_type: x.opt_type,
     }));
 
     points.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
@@ -125,6 +126,8 @@ export default function RouteMap({ data = [] }) {
           <Marker key={p.sl_no} position={[p.lat, p.lng]}>
             <Popup>
               <b>Point #{p.sl_no}</b>
+              <br />
+              <b>{p?.opt_type == 'V' ? 'Overdue Visit' : p?.opt_type == 'R' ? 'Recovery' : p?.opt_type == 'G' ? 'GRT' : ''}</b>
               <br />
               ⏱ {p.timestamp}
               <br />
