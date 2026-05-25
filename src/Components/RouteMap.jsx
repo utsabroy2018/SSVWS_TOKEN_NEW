@@ -50,26 +50,52 @@ export default function RouteMap({ data = [] }) {
 
         if (addressMap[key]) continue; // already fetched
 
-        try {
-          const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${p.lat}&lon=${p.lng}`
-          );
-          const json = await res.json();
+        // try {
+        //   const res = await fetch(
+        //     `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${p.lat}&lon=${p.lng}`
+        //   );
+        //   const json = await res.json();
 
-          newAddresses[key] =
-            json.display_name || "Unknown location";
-        } catch (err) {
-          console.error("Reverse geocode error:", err);
-          newAddresses[key] = "Location not found";
-        }
+        //   newAddresses[key] =
+        //     json.display_name || "Unknown location";
+        // } catch (err) {
+        //   console.error("Reverse geocode error:", err);
+        //   newAddresses[key] = "Location not found";
+        // }
+
+        try {
+  const res = await axios.get(
+    `https://maps.googleapis.com/maps/api/geocode/json`,
+    {
+      params: {
+        latlng: `${p.lat},${p.lng}`,
+        key: "AIzaSyDdA5VPRPZXt3IiE3zP15pet1Nn200CRzg",
+      },
+    }
+  );
+
+  console.log(res?.data?.results?.[0]?.formatted_address, 'ttttttttttttt');
+  
+
+  const address =
+    res?.data?.results?.[0]?.formatted_address;
+
+  newAddresses[key] =
+    address || "Unknown location";
+
+} catch (err) {
+  console.error("Reverse geocode error:", err);
+  newAddresses[key] = "Location not found";
+}
 
       //   await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${p.lat},${p.lng}&key=AIzaSyDdA5VPRPZXt3IiE3zP15pet1Nn200CRzg`)
 			// .then(res => {
+      //   console.log(res?.data?.results[0]?.formatted_address, 'tttttttttttttttttttttttttt');
+        
       //   const json = res?.data?.results[0]?.formatted_address;
       //   console.log(json, 'routePointsroutePointsroutePoints');
         
-			// 	newAddresses[key] =
-      //   json.display_name || "Unknown location";
+			// 	newAddresses[key] = json.display_name || "Unknown location";
 
 			// }).catch(err => {
 			// 	console.error("Reverse geocode error:", err);
