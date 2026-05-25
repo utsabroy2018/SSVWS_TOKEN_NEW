@@ -455,7 +455,7 @@ const SignInPage = () => {
 									onBlur={handleUserBlur}
 									value={formik.values.user_id}
 									className="w-full px-4 py-2 bg-slate-100 border border-slate-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500"
-									placeholder="9999"
+									placeholder="Type User Name.."
 								/>
 								{formik.touched.user_id && formik.errors.user_id && (
 									<div className="text-red-500 text-sm">

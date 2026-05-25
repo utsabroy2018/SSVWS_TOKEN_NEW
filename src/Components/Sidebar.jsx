@@ -31,6 +31,7 @@ import {
 	EyeFilled,
 	TableOutlined,
 	LoadingOutlined,
+	EnvironmentOutlined,
 } from "@ant-design/icons"
 
 import { useSocket } from "../Context/SocketContext"
@@ -253,9 +254,9 @@ function Sidebar({ mode = 0 }) {
 							},
 							{
 								key: "sub_att-2",
-								icon: <UserAddOutlined />,
+								icon: <EnvironmentOutlined />,
 								label: (
-									<Link to={"/homebm/co_tracking"}>CO Tracking</Link>
+									<Link to={"/homebm/co_tracking"}>Employee Tracking</Link>
 								),
 								// hidden: data?.attendance_dashboard == "Y" ? false : true,
 							}

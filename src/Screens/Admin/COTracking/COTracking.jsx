@@ -255,7 +255,7 @@ function COTracking({ branchCode = 100 }) {
 				<main className="px-4 pb-5 bg-slate-50 rounded-lg shadow-lg h-auto my-10 mx-32">
 					<div className="flex flex-row gap-3 py-3 rounded-xl">
 						<div className="text-3xl text-slate-700 font-bold">
-							CO or BM Tracking
+							Employee Tracking
 						</div>
 					</div>
 
@@ -283,13 +283,6 @@ function COTracking({ branchCode = 100 }) {
 								name="branch"
 								formControlName={branch?.split(",")[0]}
 								handleChange={(e) => {
-									console.log("***********========", e)
-									// setBranch(
-									// 	e.target.value +
-									// 		"," +
-									// 		branches.filter((i) => i.branch_code == e.target.value)[0]
-									// 			?.branch_name
-									// )
 									setBranch(
 										e.target.value +
 											"," +
@@ -299,30 +292,30 @@ function COTracking({ branchCode = 100 }) {
 											].filter((i) => i.branch_code == e.target.value)[0]
 												?.branch_name
 									)
-									console.log(branches)
-									console.log(
-										e.target.value +
-											"," +
-											[
-												{ branch_code: "A", branch_name: "All Branches" },
-												...branches,
-											].filter((i) => i.branch_code == e.target.value)[0]
-												?.branch_name
-									)
+									
+
 								}}
 								mode={2}
 								disabled={+branchCode !== 100}
-								// data={branches?.map((item, i) => ({
-								// 	code: item?.branch_code,
-								// 	name: item?.branch_name,
 								// }))}
-								data={[
-									{ code: "A", name: "All Branches" },
-									...branches?.map((item, i) => ({
-										code: item?.branch_code,
-										name: item?.branch_name,
-									})),
-								]}
+								// data={[
+								// 	{ code: "A", name: "All Branches" },
+								// 	...branches?.map((item, i) => ({
+								// 		code: item?.branch_code,
+								// 		name: item?.branch_name,
+								// 	})),
+								// ]}
+
+								data={branches
+								?.filter(
+									(item) =>
+										item?.branch_code !== 100
+								)
+								?.map((item) => ({
+									code: item?.branch_code,
+									name: item?.branch_name,
+								}))
+							}
 							/>
 						</div>
 					
