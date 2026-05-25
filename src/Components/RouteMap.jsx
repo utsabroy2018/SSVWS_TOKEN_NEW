@@ -74,7 +74,7 @@ export default function RouteMap({ data = [] }) {
     }
   );
 
-  console.log(res?.data?.results?.[0]?.formatted_address, 'ttttttttttttt');
+  // console.log(res?.data?.results?.[0]?.formatted_address, 'ttttttttttttt');
   
 
   const address =
