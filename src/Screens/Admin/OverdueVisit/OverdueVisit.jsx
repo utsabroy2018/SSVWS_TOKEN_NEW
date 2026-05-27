@@ -297,7 +297,7 @@ function OverdueVisit({ branchCode = 100 }) {
 								)
 								?.map((item) => ({
 									code: item?.branch_code,
-									name: item?.branch_name,
+									name: item?.branch_name + ' ('+item?.branch_code+')',
 								}))
 							}
 						/>

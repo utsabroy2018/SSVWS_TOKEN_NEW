@@ -260,20 +260,9 @@ function COTracking({ branchCode = 100 }) {
 					</div>
 
 
+			
 					<div className="grid grid-cols-3 gap-5 mt-5">
 						{/* {searchType2 !== "A" && ( */}
-						<div>
-							<TDInputTemplateBr
-								placeholder="Select Date"
-								type="date"
-								label="Select Date"
-								name="fromDate"
-								formControlName={fromDate}
-								handleChange={(e) => setFromDate(e.target.value)}
-								min={"1900-12-31"}
-								mode={1}
-							/>
-						</div>
 
 						<div>
 							<TDInputTemplateBr
@@ -313,11 +302,26 @@ function COTracking({ branchCode = 100 }) {
 								)
 								?.map((item) => ({
 									code: item?.branch_code,
-									name: item?.branch_name,
+									name: item?.branch_name + ' ('+item?.branch_code+')',
 								}))
 							}
 							/>
 						</div>
+						
+						<div>
+							<TDInputTemplateBr
+								placeholder="Select Date"
+								type="date"
+								label="Select Date"
+								name="fromDate"
+								formControlName={fromDate}
+								handleChange={(e) => setFromDate(e.target.value)}
+								min={"1900-12-31"}
+								mode={1}
+							/>
+						</div>
+
+						
 					
 							<div>
 								<TDInputTemplateBr
