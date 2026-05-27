@@ -267,6 +267,7 @@ function OverdueVisit({ branchCode = 100 }) {
 
 					{/* <>{JSON.stringify(branch.split(",")[0], null, 2)}</>
 					<>{JSON.stringify(userDetails, null, 2)}</> */}
+					
 
 					<div className={userDetails?.brn_code == 100 ? 'grid gap-5 mt-5 grid-cols-3' : 'grid gap-5 mt-5 grid-cols-2'}>
 
