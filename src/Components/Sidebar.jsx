@@ -256,7 +256,7 @@ function Sidebar({ mode = 0 }) {
 								key: "sub_att-2",
 								icon: <EnvironmentOutlined />,
 								label: (
-									<Link to={"/homebm/co_tracking"}>Employee Tracking</Link>
+									<Link to={"/homebm/co_tracking"}>Employee Navigation</Link>
 								),
 								// hidden: data?.attendance_dashboard == "Y" ? false : true,
 							}
