@@ -746,6 +746,7 @@ const attendanceReportHeader = {
 	out_addr: "Clock Out Address",
 	clock_status: "Clock Status",
 	late_in: "Late In",
+	branch_name: "Branch Name"
 	// attn_reject_remarks: "Attendance Reject Remarks",
 	// attan_status: "Attendance Status",
 }

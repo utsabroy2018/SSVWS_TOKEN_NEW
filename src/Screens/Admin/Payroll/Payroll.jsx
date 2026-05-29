@@ -29,6 +29,7 @@ import { printTableReport } from "../../../Utils/printTableReport"
 import { useNavigate } from "react-router"
 import { routePaths } from "../../../Assets/Data/Routes"
 import { getLocalStoreTokenDts } from "../../../Components/getLocalforageTokenDts"
+import zIndex from "@mui/material/styles/zIndex"
 
 // const { RangePicker } = DatePicker
 // const dateFormat = "YYYY/MM/DD"
@@ -829,8 +830,9 @@ function Payroll({ branchCode = 100 }) {
 						</div>
 					)}
 
-			{/* <>{JSON.stringify(reportData, null, 2)}</> */}
-			
+			{/* <>{JSON.stringify(reportData[0], null, 2)}</> */}
+					<div className="table_sec_new">
+						
 					{reportData?.length > 0 && searchType !== "A" && (
 						<DynamicTailwindAccordion
 							indexing
@@ -839,7 +841,8 @@ function Payroll({ branchCode = 100 }) {
 							pageSize={20}
 							renderCell={renderCell}
 							renderRowDetails={renderRowDetails}
-							deleteCols={[7, 8, 9, 10, 11]}
+							// deleteCols={[7, 8, 9, 10, 11]}
+							deleteCols={[8, 9, 10, 11, 12]}
 							filter={
 								searchType === "L"
 									? filteringData[0]
@@ -858,6 +861,7 @@ function Payroll({ branchCode = 100 }) {
 							dateTimeExceptionCols={[4]}
 						/>
 					)}
+					
 
 					{/* ///////////////////////////////////////////////////////////////// */}
 
@@ -906,6 +910,9 @@ function Payroll({ branchCode = 100 }) {
 							</Tooltip>
 						</div>
 					)}
+
+					</div>
+
 				</main>
 			</Spin>
 		</div>
