@@ -291,38 +291,42 @@ localStorage.clear()
 	}
 
 	const getCOs = async () => {
-		setLoading(true)
+	setLoading(true)
 
-		const branchCodes = selectedOptions?.map((item, i) => item?.value)
+	
+	
 
-		const creds = {
-			branch_code:
-				branchCodes?.length === 0 ? [userDetails?.brn_code] : branchCodes,
-		}
+	const branchCodes = selectedOptions?.map((item, i) => item?.value)
+	console.log('kkkkkkkkk', branchCodes,  'texttttttttttttttttt', 'selectedBranch', selectedOptions);
 
-		const tokenValue = await getLocalStoreTokenDts(navigate);
+	const creds = {
+	branch_code:
+	branchCodes?.length === 0 ? [userDetails?.brn_code] : branchCodes,
+	}
 
-		axios
-			.post(`${url}/fetch_brn_co`, creds, {
-headers: {
-Authorization: `${tokenValue?.token}`, // example header
-"Content-Type": "application/json", // optional
-},
-})
-			.then((res) => {
-				if(res?.data?.suc === 0){
-// Message('error', res?.data?.msg)
-navigate(routePaths.LANDING)
-localStorage.clear()
-} else {
-				setCOs(res?.data?.msg)
-}
-			})
-			.catch((err) => {
-				console.log("ERRRR>>>", err)
-				setLoading(false)
-			})
-		setLoading(false)
+	const tokenValue = await getLocalStoreTokenDts(navigate);
+
+	axios
+	.post(`${url}/fetch_brn_co`, creds, {
+	headers: {
+	Authorization: `${tokenValue?.token}`, // example header
+	"Content-Type": "application/json", // optional
+	},
+	})
+	.then((res) => {
+	if(res?.data?.suc === 0){
+	// Message('error', res?.data?.msg)
+	navigate(routePaths.LANDING)
+	localStorage.clear()
+	} else {
+	setCOs(res?.data?.msg)
+	}
+	})
+	.catch((err) => {
+	console.log("ERRRR>>>", err)
+	setLoading(false)
+	})
+	setLoading(false)
 	}
 
 	const handleCOChange = (e) => {

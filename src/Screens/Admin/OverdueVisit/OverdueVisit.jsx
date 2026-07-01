@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import Sidebar from "../../../Components/Sidebar"
 import axios from "axios"
 import { url } from "../../../Address/BaseUrl"
@@ -22,7 +22,9 @@ import { exportToExcel } from "../../../Utils/exportToExcel"
 import {
 	absenteesReportHeader,
 	attendanceReportHeader,
+	branchwiseTxnReportHeader,
 	overdueVisitHeader,
+	overdueVisitHeaderReport,
 } from "../../../Utils/Reports/headerMap"
 import DynamicTailwindAccordion from "../../../Components/Reports/DynamicTailwindAccordion"
 import DynamicTailwindTable from "../../../Components/Reports/DynamicTailwindTable"
@@ -31,6 +33,7 @@ import { printTableReport } from "../../../Utils/printTableReport"
 import { useNavigate } from "react-router"
 import { routePaths } from "../../../Assets/Data/Routes"
 import { getLocalStoreTokenDts } from "../../../Components/getLocalforageTokenDts"
+import { useCtrlP } from "../../../Hooks/useCtrlP"
 
 
 function OverdueVisit({ branchCode = 100 }) {
@@ -45,7 +48,10 @@ function OverdueVisit({ branchCode = 100 }) {
 	// 		: ""
 	// )
 
-	const [branch, setBranch] = useState(() => '')
+	// const [branch, setBranch] = useState(() => '')
+	const [branch, setBranch] = useState(() =>
+		branchCode !== 100 ? `${userDetails?.brn_code},${userDetails?.branch_name}` : ""
+	)
 	const [branches, setBranches] = useState(() => [])
 
 	const [overdueListData, setOverdueListData] = useState(() => [])
@@ -54,6 +60,14 @@ function OverdueVisit({ branchCode = 100 }) {
 	const [selectedLoan, setSelectedLoan] = useState(null)
 	const [showAddress, setShowAddress] = useState('')
 	const [searchText, setSearchText] = useState("")
+
+	// const [employees, setEmployees] = useState(() => [])
+	// const [employees, setEmployees] = useState(() => [])
+	// const [employee, setEmployee] = useState(() => "")
+	const [CEO_DataList, setCEO_DataList] = useState(() => [])
+	const [CEO_Selected, setCEO_Selected] = useState(() => "")
+	const [CEO_Selected_ALL, setCEO_Selected_ALL] = useState(() => "")
+	const [empId, setEmpId] = useState("");
 
 	const navigate = useNavigate()
 
@@ -101,7 +115,11 @@ function OverdueVisit({ branchCode = 100 }) {
 			emp_id: userDetails?.emp_id,
 			from_dt: formatDateToYYYYMMDD(fromDate),
 			to_dt: formatDateToYYYYMMDD(toDate),
+			co_id: CEO_Selected == "all" ? CEO_Selected_ALL : CEO_Selected
 		}
+
+		console.log(creds, 'credscredscredscreds');
+
 
 		axios.post(`${url}/app_visit_op/fetch_list_save_visit_operation`, creds, {
 			headers: {
@@ -127,66 +145,92 @@ function OverdueVisit({ branchCode = 100 }) {
 		handleFetchBranches()
 	}, [])
 
-	// const filteredOverdueListData = overdueListData.map(
-	// ({ member_code, loan_id, ...rest }) => ({
-	// ...rest,
-	// action: (
-	// <button
-	// className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-	// onClick={() => handleView(loan_id)}
-	// >
-	// View
-	// </button>
-	// ),
-	// })
-	// );
+	const handleFetchCEO = async () => {
 
-	// const filteredOverdueListData = overdueListData.map((item) => {
+		setLoading(true)
 
-	// 	const { member_code, loan_id, branch_code, ...rest } = item
+		const branchId = branch.split(',')[0];
 
-	// 	return {
-	// 		...rest,
+		console.log(branchId.length, 'selectedBranchMMMMMMMMMMMM');
 
-	// 		action: (
-	// 			<button
-	// 				className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-	// 				onClick={() => handleView(item)}
-	// 			>
-	// 				View
-	// 			</button>
-	// 		),
-	// 	}
-	// })
+		if (branchId.length === 0 && userDetails?.brn_code !== 100) {
+			setCEO_DataList([])
+			setLoading(false)
+			return;
+		}
+
+		const creds = {
+			// branch_code: branchCodes?.length === 0 ? [userDetails?.brn_code] : branchCodes,
+			branch_code: userDetails?.brn_code == 100 ? [branchId] : [userDetails?.brn_code],
+		}
+
+		console.log(creds, 'selectedBranch');
+		// return;
+
+		const tokenValue = await getLocalStoreTokenDts(navigate);
+
+		axios
+			.post(`${url}/fetch_brn_co`, creds, {
+				headers: {
+					Authorization: `${tokenValue?.token}`, // example header
+					"Content-Type": "application/json", // optional
+				},
+			})
+			.then((res) => {
+				if (res?.data?.suc === 0) {
+					// Message('error', res?.data?.msg)
+					// navigate(routePaths.LANDING)
+					// localStorage.clear()
+				} else {
+					// console.log(res?.data?.msg, 'gggggggggggggggggggg');
+
+					// setEmployees(res?.data?.msg)
+					setCEO_DataList([
+						{ co_id: "all", emp_name: "All" }, // add All option first
+						...res?.data?.msg
+					]);
+				}
+			})
+			.catch((err) => {
+				console.log("ERRRR>>>", err)
+				setLoading(false)
+			})
+		setLoading(false)
+	}
+
+	useEffect(() => {
+		handleFetchCEO()
+	}, [branch])
+
 
 	const filteredOverdueListData = overdueListData
-	.filter((item) => {
+		.filter((item) => {
 
-		const search = searchText.toLowerCase()
+			const search = searchText.toLowerCase()
 
-		return (
-			item?.group_code?.toString()?.toLowerCase()?.includes(search) ||
-			item?.group_name?.toLowerCase()?.includes(search) ||
-			item?.member_name?.toLowerCase()?.includes(search)
-		)
-	})
-	.map((item) => {
+			return (
+				item?.group_code?.toString()?.toLowerCase()?.includes(search) ||
+				item?.group_name?.toLowerCase()?.includes(search) ||
+				item?.member_name?.toLowerCase()?.includes(search)
+			)
+		})
+		.map((item) => {
 
-		const { member_code, loan_id, branch_code, ...rest } = item
+			const { member_code, loan_id, branch_code, ...rest } = item
 
-		return {
-			...rest,
+			return {
+				...rest,
 
-			action: (
-				<button
-					className="button_Over_view"
-					onClick={() => handleView(item)}
-				>
-					View
-				</button>
-			),
-		}
-	})
+				action: (
+					<button
+						className="button_Over_view"
+						onClick={() => handleView(item)}
+					>
+						View
+					</button>
+				),
+			}
+		})
 
 	const handleView = async (item) => {
 
@@ -249,6 +293,31 @@ function OverdueVisit({ branchCode = 100 }) {
 
 	}
 
+	const [selectedColumns, setSelectedColumns] = useState(null);
+	const [md_columns, setColumns] = useState([]);
+
+	const dataToExport = overdueListData;
+
+	const headersToExport = overdueVisitHeaderReport;
+
+	const fileName = `Overdue_Visit_Report${new Date().toLocaleString("en-GB")}.xlsx`
+
+	const handlePrint = useCallback(() => {
+		printTableReport(
+			dataToExport,
+			headersToExport,
+			fileName?.split(",")[0],
+			[0, 2]
+		)
+	}, [dataToExport, headersToExport, fileName, printTableReport])
+
+	useCtrlP(handlePrint)
+	const populateColumns = (main_dt, headerExport) => {
+		const columnToBeShown = Object.keys(main_dt[0]).map((key, index) => ({ header: headerExport[key], index }));
+		setColumns(columnToBeShown);
+		setSelectedColumns(columnToBeShown.map(el => el.index));
+	}
+
 
 	return (
 		<div>
@@ -267,43 +336,79 @@ function OverdueVisit({ branchCode = 100 }) {
 
 					{/* <>{JSON.stringify(branch.split(",")[0], null, 2)}</>
 					<>{JSON.stringify(userDetails, null, 2)}</> */}
-					
 
-					<div className={userDetails?.brn_code == 100 ? 'grid gap-5 mt-5 grid-cols-3' : 'grid gap-5 mt-5 grid-cols-2'}>
+
+					<div className={userDetails?.brn_code == 100 ? 'grid gap-5 mt-5 grid-cols-4' : 'grid gap-5 mt-5 grid-cols-3'}>
 
 						{userDetails?.brn_code == 100 && (
-						<div>
-							<TDInputTemplateBr
-							placeholder="Branch..."
-							type="text"
-							label="Branch"
-							name="branch"
-							formControlName={branch?.split(",")[0]}
-							handleChange={(e) => {
-								console.log("***********========", e)
+							<div>
+								<TDInputTemplateBr
+									placeholder="Branch..."
+									type="text"
+									label="Branch"
+									name="branch"
+									formControlName={branch?.split(",")[0]}
+									handleChange={(e) => {
+										console.log("***********========", e)
 
-								const selectedBranch = branches?.find(
-									(i) => i.branch_code == e.target.value
-								)
+										const selectedBranch = branches?.find(
+											(i) => i.branch_code == e.target.value
+										)
 
-								setBranch(
-									e.target.value + "," + selectedBranch?.branch_name
-								)
-							}}
-							mode={2}
-							data={branches
-								?.filter(
-									(item) =>
-										item?.branch_code !== 100
-								)
-								?.map((item) => ({
-									code: item?.branch_code,
-									name: item?.branch_name + ' ('+item?.branch_code+')',
-								}))
-							}
-						/>
-						</div>
+										console.log(selectedBranch, "selectedBranch", e.target.value)
+
+										setBranch(
+											e.target.value + "," + selectedBranch?.branch_name
+										)
+									}}
+									mode={2}
+									data={branches
+										?.filter(
+											(item) =>
+												item?.branch_code !== 100
+										)
+										?.map((item) => ({
+											code: item?.branch_code,
+											name: item?.branch_name + ' (' + item?.branch_code + ')',
+										}))
+									}
+								/>
+							</div>
 						)}
+
+						<div>
+							{/* {userDetails?.brn_code} // {branch.split(',')[0]} // {CEO_Selected}
+							{JSON.stringify(CEO_DataList, 2)} ///////////// {JSON.stringify(CEO_Selected_ALL, 2)} */}
+
+
+							<TDInputTemplateBr
+								placeholder="Select CEO's..."
+								type="text"
+								label="Select CEO's"
+								name="employee"
+								formControlName={CEO_Selected}
+								handleChange={(e) => {
+									if (e.target.value === "all") {
+										// Select all
+										const allEmployeeIds = CEO_DataList.filter((item) => item.co_id !== "all").map((item) => item.co_id);
+										setCEO_Selected_ALL(allEmployeeIds);
+										setCEO_Selected(e.target.value);
+									} else {
+										// Single select → save as array
+										setCEO_Selected([Number(e.target.value)]);
+										setCEO_Selected_ALL("");
+									}
+								}}
+								mode={2}
+								data={[
+									// ...(employees?.length > 0 ? [{ code: "A", name: "All" }] : []),
+									...CEO_DataList?.map((item) => ({
+										code: item.co_id,
+										name: item.emp_name,
+									})),
+								]}
+							/>
+						</div>
 
 						<div>
 							<TDInputTemplateBr
@@ -335,7 +440,7 @@ function OverdueVisit({ branchCode = 100 }) {
 
 
 
-						<div className="flex justify-center col-span-3">
+						<div className={userDetails?.brn_code == 100 ? 'flex justify-center col-span-4' : 'flex justify-center col-span-3'}>
 							<button
 								className={`inline-flex items-center px-4 py-2 mt-0 ml-0 sm:mt-0 text-sm font-small text-center text-white border hover:border-green-600 border-teal-500 bg-teal-500 transition ease-in-out hover:bg-green-600 duration-300 rounded-full  dark:focus:ring-primary-900`}
 								onClick={() => {
@@ -354,27 +459,27 @@ function OverdueVisit({ branchCode = 100 }) {
 
 					{/* <>{JSON.stringify(overdueListData, null, 2)}</> */}
 					<div className="table_overdue">
-					{overdueListData && overdueListData.length > 0 &&(
-					<div className="flex justify-end mt-6 mb-3">
-						<div className="w-full md:w-100">
-							<input
-								type="text"
-								placeholder="Search by Group Code, Group Name, Member Name..."
-								value={searchText}
-								onChange={(e) => setSearchText(e.target.value)}
-								className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-							/>
-						</div>
-					</div>
-					)}
+						{overdueListData && overdueListData.length > 0 && (
+							<div className="flex justify-end mt-6 mb-3">
+								<div className="w-full md:w-100">
+									<input
+										type="text"
+										placeholder="Search by Group Code, Group Name, Member Name..."
+										value={searchText}
+										onChange={(e) => setSearchText(e.target.value)}
+										className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+									/>
+								</div>
+							</div>
+						)}
 
-					<DynamicTailwindTable
-						data={filteredOverdueListData}
-						headersMap={overdueVisitHeader}
-						pageSize={20}
-						indexing
-						dateTimeExceptionCols={[4]}
-					/>
+						<DynamicTailwindTable
+							data={filteredOverdueListData}
+							headersMap={overdueVisitHeader}
+							pageSize={20}
+							indexing
+							dateTimeExceptionCols={[4]}
+						/>
 					</div>
 
 
@@ -636,24 +741,24 @@ function OverdueVisit({ branchCode = 100 }) {
 
 												{showAddress && (
 													<>
-													<p className="bg-white border rounded-lg p-3 break-words text-gray-700 leading-6 shadow-sm">
-														{showAddress}
-													</p>
+														<p className="bg-white border rounded-lg p-3 break-words text-gray-700 leading-6 shadow-sm">
+															{showAddress}
+														</p>
 
-													{/* Google Map */}
-												<div className="w-full h-[250px] rounded-lg overflow-hidden border shadow-sm mt-5">
-													<iframe
-														width="100%"
-														height="100%"
-														frameBorder="0"
-														scrolling="no"
-														marginHeight="0"
-														marginWidth="0"
-														src={`https://maps.google.com/maps?q=${selectedLoan?.action_details[0]?.visit_lat},${selectedLoan?.action_details[0]?.visit_long}&z=15&output=embed`}
-														title="location-map"
-													/>
-												</div>
-												</>
+														{/* Google Map */}
+														<div className="w-full h-[250px] rounded-lg overflow-hidden border shadow-sm mt-5">
+															<iframe
+																width="100%"
+																height="100%"
+																frameBorder="0"
+																scrolling="no"
+																marginHeight="0"
+																marginWidth="0"
+																src={`https://maps.google.com/maps?q=${selectedLoan?.action_details[0]?.visit_lat},${selectedLoan?.action_details[0]?.visit_long}&z=15&output=embed`}
+																title="location-map"
+															/>
+														</div>
+													</>
 												)}
 
 											</div>
@@ -678,6 +783,55 @@ function OverdueVisit({ branchCode = 100 }) {
 							</div>
 						)}
 					</Modal>
+
+					{/* {JSON.stringify(overdueListData, 2)} */}
+
+					{overdueListData.length !== 0 && (
+						<div className="flex gap-4">
+							<Tooltip title="Export to Excel">
+								<button
+									onClick={() => {
+										let exportedDT = [...dataToExport];
+
+										exportToExcel(
+											exportedDT,
+											overdueVisitHeaderReport,
+											fileName,
+											[0, 2]
+										);
+									}}
+									className="mt-5 justify-center items-center rounded-full text-green-900"
+								>
+									<FileExcelOutlined
+										style={{
+											fontSize: 30,
+										}}
+									/>
+								</button>
+							</Tooltip>
+							<Tooltip title="Print">
+								<button
+									onClick={() => {
+										let exportedDT = [...dataToExport];
+
+										printTableReport(
+											exportedDT,
+											overdueVisitHeaderReport,
+											fileName?.split(",")[0],
+											[0, 2]
+										);
+									}}
+									className="mt-5 justify-center items-center rounded-full text-pink-600"
+								>
+									<PrinterOutlined
+										style={{
+											fontSize: 30,
+										}}
+									/>
+								</button>
+							</Tooltip>
+						</div>
+					)}
 
 
 				</main>

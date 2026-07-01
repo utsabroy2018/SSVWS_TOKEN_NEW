@@ -545,6 +545,62 @@ const overdueBranchReportHeader = {
 	Category: "Category"
 }
 
+
+const Receipt_Summary_Report_Group = {
+	payment_date: "Payment Date",
+	branch_code: "Branch Code",
+	branch_name: "Branch Name",
+	group_code: "Group Code",
+	group_name: "Group Name",
+	no_of_receipts: "No Of Receipts",
+	payment_ids: "Receipts No."
+}
+
+const Receipt_Summary_Report_CO = {
+	payment_date: "Payment Date",
+	branch_code: "Branch Code",
+	co_id: "Co-ID",
+	emp_name: "Employee Name",
+	branch_name: "Branch Name",
+	group_code: "Group Code",
+	group_name: "Group Name",
+	no_of_receipts: "No Of Receipts",
+	payment_ids: "Receipts No."
+}
+
+const Receipt_Summary_Report_Group_Branch = {
+	payment_date: "Payment Date",
+	// branch_code: "Branch Code",
+	// branch_name: "Branch Name",
+	group_code: "Group Code",
+	group_name: "Group Name",
+	no_of_receipts: "No Of Receipts",
+	payment_ids: "Receipts No."
+}
+
+const Receipt_Summary_Report_CO_Branch = {
+	payment_date: "Payment Date",
+	// branch_code: "Branch Code",
+	co_id: "Co-ID",
+	emp_name: "Employee Name",
+	// branch_name: "Branch Name",
+	group_code: "Group Code",
+	group_name: "Group Name",
+	no_of_receipts: "No Of Receipts",
+	payment_ids: "Receipts No."
+}
+
+// {
+//   "payment_date": "28/04/2026",
+//   "branch_code": 111,  ////
+//   "branch_name": "Baruipur(TOTAL BC)", //// 
+//   "group_code": 10569, ////
+//   "group_name": "Sarat-1", ////
+//   "no_of_receipts": 5,
+//   "payment_ids": "1778663544196,1778663544257,1778663544284,1778663544318,1778663544347"
+// }
+
+
 const memberwiseReportHeader = {
   form_no: "Form No",
   grt_date: "GRT Date",
@@ -1077,6 +1133,15 @@ const branchwiseTxnReportHeader = {
 	intt_recov:"Interest Recovery", 
 }
 
+const overdueVisitHeaderReport = {
+	branch_code: "Branch Code",
+	group_code: "Group Code",
+	group_name: "Group Name",
+	member_code: "Member Code",
+	member_name: "Member Name",
+	loan_id: "Loan ID",
+}
+
 
 const txnDetailsHeader = {
 	payment_date: "Payment Date",
@@ -1362,5 +1427,10 @@ export {
 	memberwiseReportHeader_No_CloseDate,
 	txnGrpHeaderForPreviousLoanTrxns,
 	txnFundHeaderforPreviousLoanTrxns,
-	txnCoHeaderForPreviousLoanTrxns
+	txnCoHeaderForPreviousLoanTrxns,
+	Receipt_Summary_Report_Group,
+	Receipt_Summary_Report_CO,
+	Receipt_Summary_Report_Group_Branch,
+	Receipt_Summary_Report_CO_Branch,
+	overdueVisitHeaderReport
 }
