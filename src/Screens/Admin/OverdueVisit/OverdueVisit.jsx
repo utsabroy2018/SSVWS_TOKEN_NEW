@@ -319,6 +319,144 @@ function OverdueVisit({ branchCode = 100 }) {
 	}
 
 
+	const prepareModalExportData = () => {
+	if (!selectedLoan) return [];
+
+	const member = selectedLoan?.member_details || {};
+	const loans = selectedLoan?.loan_details || [];
+	const overdue = selectedLoan?.overdue_details || [];
+	const actions = selectedLoan?.action_details || [];
+
+	let exportData = [];
+
+	// Member Details
+	exportData.push({
+		Section: "Member Details",
+		Label1: "Visit Date & Time",
+		Value1: member?.datetime_visit || "",
+		Label2: "Group Name",
+		Value2: member?.group_name || "",
+		Label3: "Member Name",
+		Value3: member?.member_name || "",
+		Label4: "Mobile Number",
+		Value4: member?.client_mobile || "",
+		Label5: "Address",
+		Value5: member?.client_addr || "",
+		Label6: "",
+		Value6: "",
+	});
+
+	// Loan Details
+	loans.forEach((loan) => {
+		exportData.push({
+			Section: "Loan Details",
+			Label1: "Loan ID",
+			Value1: loan?.loan_id || "",
+			Label2: "Scheme Name",
+			Value2: loan?.scheme_name || "",
+			Label3: "Disbursement Date",
+			Value3: loan?.disb_dt || "",
+			Label4: "EMI Amount",
+			Value4: loan?.tot_emi || "",
+			Label5: "Member Disbursement",
+			Value5: loan?.member_disb_amount || "",
+			Label6: "Group Disbursement",
+			Value6: loan?.group_disb_amount || "",
+		});
+	});
+
+	// Overdue Details
+	overdue.forEach((item) => {
+		exportData.push({
+			Section: "Overdue Details",
+			Label1: "Overdue Date",
+			Value1: item?.overdue_date || "",
+			Label2: "Member Overdue Amount",
+			Value2: item?.member_overdue_amount || "",
+			Label3: "Member Outstanding",
+			Value3: item?.member_outstanding || "",
+			Label4: "Group Overdue Amount",
+			Value4: item?.group_overdue_amount || "",
+			Label5: "Group Outstanding",
+			Value5: item?.group_outstanding || "",
+			Label6: "",
+			Value6: "",
+		});
+	});
+
+	// Visit Action Details
+	actions.forEach((action) => {
+		exportData.push({
+			Section: "Visit Action Details",
+			Label1: "Promise Date",
+			Value1: action?.promise_date || "",
+			Label2: "Promise Amount",
+			Value2: action?.promise_amt || "",
+			Label3: "Remarks",
+			Value3: action?.remarks || "",
+			Label4: "",
+			Value4: "",
+			Label5: "",
+			Value5: "",
+			Label6: "",
+			Value6: "",
+		});
+	});
+
+	return exportData;
+};
+
+const handleModalExport = () => {
+	const exportData = prepareModalExportData();
+
+	const groupName = selectedLoan?.member_details?.group_name?.replace(/\s+/g, "_");
+	const memberName = selectedLoan?.member_details?.member_name?.replace(/\s+/g, "_");
+
+	if (exportData.length === 0) {
+		Message("error", "No data available to export");
+		return;
+	}
+
+	const worksheet = XLSX.utils.json_to_sheet(exportData);
+	const workbook = XLSX.utils.book_new();
+
+	XLSX.utils.book_append_sheet(
+		workbook,
+		worksheet,
+		"Overdue Visit Details"
+	);
+
+	XLSX.writeFile(
+		workbook,
+		`${memberName}_${groupName}_${new Date().getTime()}.xlsx`
+	);
+};
+
+const handleModalPrint = () => {
+	const printData = prepareModalExportData();
+
+	const groupName = selectedLoan?.member_details?.group_name?.replace(/\s+/g, "_");
+	const memberName = selectedLoan?.member_details?.member_name?.replace(/\s+/g, "_");
+
+	if (printData.length === 0) {
+		Message("error", "No data available to print");
+		return;
+	}
+
+	// Create dynamic headers from data keys
+	const headers = Object.keys(printData[0]).reduce((acc, key) => {
+		acc[key] = key;
+		return acc;
+	}, {});
+
+	printTableReport(
+		printData,
+		headers,
+		`${memberName}_${groupName}_${new Date().getTime()}`
+	);
+};
+
+
 	return (
 		<div>
 			<Spin
@@ -485,18 +623,42 @@ function OverdueVisit({ branchCode = 100 }) {
 
 					<Modal
 						title={
-							<div className="text-xl font-bold text-slate-700">
-								Overdue Visit Details
-							</div>
-						}
+	<div className="flex items-center justify-between w-full">
+		<div className="text-xl font-bold text-slate-700">
+			Overdue Visit Details
+		</div>
+
+		<div className="flex gap-2 mr-8">
+			<Button key="excel" onClick={handleModalExport}>
+				<FileExcelOutlined /> Export to Excel
+			</Button>
+
+			<Button key="print" onClick={handleModalPrint}>
+				<PrinterOutlined /> Print
+			</Button>
+		</div>
+	</div>
+}
 						open={isModalOpen}
 						onCancel={() => setIsModalOpen(false)}
+						// footer={[
+						// 	<Button key="close" onClick={() => setIsModalOpen(false)}>
+						// 		Close
+						// 	</Button>,
+						// ]}
+
 						footer={[
+							// <Button key="excel" onClick={handleModalExport}>
+							// 	<FileExcelOutlined /> Export to Excel
+							// </Button>,
+							// <Button key="print" onClick={handleModalPrint}>
+							// 	<PrinterOutlined /> Print
+							// </Button>,
 							<Button key="close" onClick={() => setIsModalOpen(false)}>
 								Close
 							</Button>,
 						]}
-						width={850}
+												width={850}
 					>
 						{selectedLoan && (
 							<div className="space-y-5">
@@ -562,6 +724,8 @@ function OverdueVisit({ branchCode = 100 }) {
 									<h2 className="text-lg font-semibold mb-4 text-slate-700">
 										Loan Details
 									</h2>
+
+									{/* {JSON.stringify(selectedLoan?.loan_details.length, 2)} */}
 
 									{selectedLoan?.loan_details?.map((loan, index) => (
 										<div
@@ -786,7 +950,7 @@ function OverdueVisit({ branchCode = 100 }) {
 
 					{/* {JSON.stringify(overdueListData, 2)} */}
 
-					{overdueListData.length !== 0 && (
+					{/* {overdueListData.length !== 0 && (
 						<div className="flex gap-4">
 							<Tooltip title="Export to Excel">
 								<button
@@ -831,7 +995,7 @@ function OverdueVisit({ branchCode = 100 }) {
 								</button>
 							</Tooltip>
 						</div>
-					)}
+					)} */}
 
 
 				</main>
