@@ -25,7 +25,6 @@ import {
 	branchwiseTxnReportHeader,
 	overdueVisitHeader,
 	overdueVisitHeaderReport,
-	overdueVisitHeaderReport_ALL,
 } from "../../../Utils/Reports/headerMap"
 import DynamicTailwindAccordion from "../../../Components/Reports/DynamicTailwindAccordion"
 import DynamicTailwindTable from "../../../Components/Reports/DynamicTailwindTable"
@@ -136,7 +135,6 @@ function OverdueVisit({ branchCode = 100 }) {
 			} else {
 				console.log("userDetailsuserDetailsuserDetailsuserDetails", res?.data)
 				Message('success', res?.data?.msg)
-				// setOverdueListData(res?.data?.data)
 				setOverdueListData(res?.data?.data)
 			}
 			setLoading(false)
@@ -300,8 +298,7 @@ function OverdueVisit({ branchCode = 100 }) {
 
 	const dataToExport = overdueListData;
 
-	// const headersToExport = overdueVisitHeaderReport;
-	const headersToExport = overdueVisitHeaderReport_ALL;
+	const headersToExport = overdueVisitHeaderReport;
 
 	const fileName = `Overdue_Visit_Report${new Date().toLocaleString("en-GB")}.xlsx`
 
@@ -458,43 +455,6 @@ const handleModalPrint = () => {
 		`${memberName}_${groupName}_${new Date().getTime()}`
 	);
 };
-
-const dataToExport = overdueListData.map((item) => ({
-	branch_code: item?.branch_code,
-	group_code: item?.group_code,
-	group_name: item?.group_name,
-	member_code: item?.member_code,
-	member_name: item?.member_name,
-	loan_id: item?.loan_id,
-
-	// Member Details
-	datetime_visit: item?.member_details?.datetime_visit || "",
-	client_mobile: item?.member_details?.client_mobile || "",
-	client_addr: item?.member_details?.client_addr || "",
-
-	// Action Details
-	promise_date: item?.action_details?.[0]?.promise_date || "",
-	promise_amt: item?.action_details?.[0]?.promise_amt || "",
-	remarks: item?.action_details?.[0]?.remarks || "",
-
-	// Loan Details (first loan)
-	scheme_name: item?.loan_details?.[0]?.scheme_name || "",
-	disb_dt: item?.loan_details?.[0]?.disb_dt || "",
-	tot_emi: item?.loan_details?.[0]?.tot_emi || "",
-	member_disb_amount: item?.loan_details?.[0]?.member_disb_amount || "",
-	group_disb_amount: item?.loan_details?.[0]?.group_disb_amount || "",
-
-	// Overdue Details (first overdue)
-	overdue_date: item?.overdue_details?.[0]?.overdue_date || "",
-	member_overdue_amount:
-		item?.overdue_details?.[0]?.member_overdue_amount || "",
-	member_outstanding:
-		item?.overdue_details?.[0]?.member_outstanding || "",
-	group_overdue_amount:
-		item?.overdue_details?.[0]?.group_overdue_amount || "",
-	group_outstanding:
-		item?.overdue_details?.[0]?.group_outstanding || "",
-}));
 
 
 	return (
@@ -878,8 +838,6 @@ const dataToExport = overdueListData.map((item) => ({
 									))}
 								</div>
 
-								
-
 								{/* Action Details */}
 								<div className="border rounded-xl p-4 bg-blue-50">
 									<h2 className="text-lg font-semibold mb-4 text-indigo-600">
@@ -1001,8 +959,7 @@ const dataToExport = overdueListData.map((item) => ({
 
 										exportToExcel(
 											exportedDT,
-											// overdueVisitHeaderReport,
-											overdueVisitHeaderReport_ALL,
+											overdueVisitHeaderReport,
 											fileName,
 											[0, 2]
 										);
@@ -1023,8 +980,7 @@ const dataToExport = overdueListData.map((item) => ({
 
 										printTableReport(
 											exportedDT,
-											// overdueVisitHeaderReport,
-											overdueVisitHeaderReport_ALL,
+											overdueVisitHeaderReport,
 											fileName?.split(",")[0],
 											[0, 2]
 										);

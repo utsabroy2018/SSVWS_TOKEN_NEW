@@ -1142,6 +1142,31 @@ const overdueVisitHeaderReport = {
 	loan_id: "Loan ID",
 }
 
+export const overdueVisitHeaderReport_ALL = {
+	branch_code: "Branch Code",
+	group_code: "Group Code",
+	group_name: "Group Name",
+	member_code: "Member Code",
+	member_name: "Member Name",
+	loan_id: "Loan ID",
+	datetime_visit: "Visit Date & Time",
+	client_mobile: "Mobile",
+	client_addr: "Address",
+	promise_date: "Promise Date",
+	promise_amt: "Promise Amount",
+	remarks: "Remarks",
+	scheme_name: "Scheme Name",
+	disb_dt: "Disbursement Date",
+	tot_emi: "EMI Amount",
+	member_disb_amount: "Member Disbursement",
+	group_disb_amount: "Group Disbursement",
+	overdue_date: "Overdue Date",
+	member_overdue_amount: "Member Overdue",
+	member_outstanding: "Member Outstanding",
+	group_overdue_amount: "Group Overdue",
+	group_outstanding: "Group Outstanding",
+};
+
 
 const txnDetailsHeader = {
 	payment_date: "Payment Date",
@@ -1432,5 +1457,6 @@ export {
 	Receipt_Summary_Report_CO,
 	Receipt_Summary_Report_Group_Branch,
 	Receipt_Summary_Report_CO_Branch,
-	overdueVisitHeaderReport
+	overdueVisitHeaderReport,
+	overdueVisitHeaderReport_ALL
 }
